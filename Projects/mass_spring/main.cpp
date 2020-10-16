@@ -50,6 +50,24 @@ int main(int argc, char* argv[])
             4. Set boundary condition (node_is_fixed) and helper function (to achieve moving boundary condition).
             5. Generate quad mesh for rendering.
         */
+	
+		int xN = 10;
+		int yN = 10;
+		// int N = xN * yN;
+		T xW = 1.f;
+		T yW = 1.f;
+		T xWHalf = xW / 2.f;
+		T yWHalf = yW / 2.f;
+		T mN = 1.f;
+
+		for (int i = 0; i < xN; i++) {
+			for (int j = 0; j < yN; j++) {
+				x.push_back(TV(xW/xN - xWHalf, yW/yN - yWHalf, 0.f));
+				m.push_back(mN);
+			}
+		}
+
+
         driver.helper = [&](T t, T dt) {
             // TODO
         };
@@ -62,7 +80,7 @@ int main(int argc, char* argv[])
         /* 
             1. Create node data from data/points: The first line indicates the number of points and dimension (which is 3). 
             2. Fill segments and rest_length from data/cells: The first line indicates the number of tetrahedra and the number of vertices of each tet (which is 6). Each edge in this tetrahedral mesh will be a segment. Be careful not to create duplicate edges. 
-            3. Choose proper youngs_modulus, damping_coeff, dt; 
+            3. Choose proper youngs_modulus, damping_coeff, dt
             4. Set boundary condition (node_is_fixed) and helper function (to achieve moving boundary condition).
         */
 

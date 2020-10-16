@@ -1,0 +1,3 @@
+/home/spencer/academic/cis563/Build/Release/partio-download/CMakeFiles/rebuild_cache.dir
+/home/spencer/academic/cis563/Build/Release/partio-download/CMakeFiles/edit_cache.dir
+/home/spencer/academic/cis563/Build/Release/partio-download/CMakeFiles/partio-download.dir
