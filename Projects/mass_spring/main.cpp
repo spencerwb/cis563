@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
         std::ifstream pointsStream("data/points");
         std::string line = "";
         getline(pointsStream, line);
-        std::cout << line << std::endl;
+        // std::cout << line << std::endl;
 
         youngs_modulus = 1.f;
         damping_coeff = 1.f;
