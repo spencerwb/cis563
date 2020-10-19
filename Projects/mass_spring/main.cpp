@@ -63,8 +63,8 @@ int main(int argc, char* argv[])
     		T mN = 1.f;
 
         youngs_modulus = 1.f;
-        T damping_coeff = 1.f;
-        T dt = 0.01f;
+        damping_coeff = 1.f;
+        dt = 0.01f;
 
         T rLStx = xW / float(xN);
         T rLSty = yW / float(yN);
