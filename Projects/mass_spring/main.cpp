@@ -74,43 +74,30 @@ int main(int argc, char* argv[])
 				v.push_back(TV(0.f, 0.f, 0.f));
 				m.push_back(mN);
 
-
         int idx = i + j * xN;
 
-        Eigen::Matrix2i struct1();
-        Eigen::Matrix2i struct2();
-        struct1 << idx, idx + xN;
-        struct2 << idx, idx + 1;
         if (j < yN - 1) {
-          segments.push_back(struct1);
+          segments.push_back(Eigen::Vector2i(idx, idx + xN));
           rest_length.push_back(rLSty);
         }
         if (i < xN - 1) {
-          segments.push_back(struct2);
+          segments.push_back(Eigen::Vector2i(idx, idx + 1));
           rest_length.push_back(rLStx);
         }
 
-        Eigen::Matrix2i shear1();
-        Eigen::Matrix2i shear2();
-        shear1 << idx, idx + 1 + xN;
-        shear2 << idx + 1, idx + xN;
         if (i < xN - 1 && j < yN - 1) {
-          segments.push_back(shear1);
-          segments.push_back(shear2);
+          segments.push_back(Eigen::Vector2i(idx, idx + 1 + xN));
+          segments.push_back(Eigen::Vector2i(idx + 1, idx + xN));
           rest_length.push_back(rLSh);
           rest_length.push_back(rLSh);
         }
 
-        Eigen::Matrix2i bend1();
-        Eigen::Matrix2i bend2();
-        bend1 << idx, idx + 2 * xN;
-        bend2 << idx, idx + 2;
         if (j < yN - 2) {
-          segments.push_back(bend1);
+          segments.push_back(Eigen::Vector2i(idx, idx + 2 * xN));
           rest_length.push_back(rLBdy);
         }
         if (i < xN - 2) {
-          segments.push_back(bend2);
+          segments.push_back(Eigen::Vector2i(idx, idx + 2));
           rest_length.push_back(rLBdx);
         }
 			}
