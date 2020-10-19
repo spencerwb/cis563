@@ -53,55 +53,60 @@ int main(int argc, char* argv[])
             5. Generate quad mesh for rendering.
         */
 
-		int xN = 10;
-		int yN = 10;
-		// int N = xN * yN;
-		T xW = 1.f;
-		T yW = 1.f;
-		T xWHalf = xW / 2.f;
-		T yWHalf = yW / 2.f;
-		T mN = 1.f;
+    		int xN = 10;
+    		int yN = 10;
+    		// int N = xN * yN;
+    		T xW = 1.f;
+    		T yW = 1.f;
+    		T xWHalf = xW / 2.f;
+    		T yWHalf = yW / 2.f;
+    		T mN = 1.f;
 
-    T rLStx = xW / float(xN);
-    T rLSty = yW / float(yN);
-    T rLSh = sqrt(rLStx * rLStx + rLSty * rLSty);
-    T rLBdx = rLStx * 2.f;
-    T rLBdy = rLSty * 2.f;
+        T rLStx = xW / float(xN);
+        T rLSty = yW / float(yN);
+        T rLSh = sqrt(rLStx * rLStx + rLSty * rLSty);
+        T rLBdx = rLStx * 2.f;
+        T rLBdy = rLSty * 2.f;
 
-		for (int j = 0; j < yN; j++) {
-			for (int i = 0; i < xN; i++) {
-				x.push_back(TV(xW/xN - xWHalf, yW/yN - yWHalf, 0.f));
-				v.push_back(TV(0.f, 0.f, 0.f));
-				m.push_back(mN);
+    		for (int j = 0; j < yN; j++) {
+    			for (int i = 0; i < xN; i++) {
+    				x.push_back(TV(xW/xN - xWHalf, yW/yN - yWHalf, 0.f));
+    				v.push_back(TV(0.f, 0.f, 0.f));
+    				m.push_back(mN);
+            if ((i == 0 && j == 0) || (i == 0 && j == yN - 1)) {
+              node_is_fixed.push_back(true);
+            } else {
+              node_is_fixed.push_back(false);
+            }
 
-        int idx = i + j * xN;
+            int idx = i + j * xN;
 
-        if (j < yN - 1) {
-          segments.push_back(Eigen::Vector2i(idx, idx + xN));
-          rest_length.push_back(rLSty);
-        }
-        if (i < xN - 1) {
-          segments.push_back(Eigen::Vector2i(idx, idx + 1));
-          rest_length.push_back(rLStx);
-        }
+            if (j < yN - 1) {
+              segments.push_back(Eigen::Vector2i(idx, idx + xN));
+              rest_length.push_back(rLSty);
+            }
+            if (i < xN - 1) {
+              segments.push_back(Eigen::Vector2i(idx, idx + 1));
+              rest_length.push_back(rLStx);
+            }
 
-        if (i < xN - 1 && j < yN - 1) {
-          segments.push_back(Eigen::Vector2i(idx, idx + 1 + xN));
-          segments.push_back(Eigen::Vector2i(idx + 1, idx + xN));
-          rest_length.push_back(rLSh);
-          rest_length.push_back(rLSh);
-        }
+            if (i < xN - 1 && j < yN - 1) {
+              segments.push_back(Eigen::Vector2i(idx, idx + 1 + xN));
+              segments.push_back(Eigen::Vector2i(idx + 1, idx + xN));
+              rest_length.push_back(rLSh);
+              rest_length.push_back(rLSh);
+            }
 
-        if (j < yN - 2) {
-          segments.push_back(Eigen::Vector2i(idx, idx + 2 * xN));
-          rest_length.push_back(rLBdy);
-        }
-        if (i < xN - 2) {
-          segments.push_back(Eigen::Vector2i(idx, idx + 2));
-          rest_length.push_back(rLBdx);
-        }
-			}
-		}
+            if (j < yN - 2) {
+              segments.push_back(Eigen::Vector2i(idx, idx + 2 * xN));
+              rest_length.push_back(rLBdy);
+            }
+            if (i < xN - 2) {
+              segments.push_back(Eigen::Vector2i(idx, idx + 2));
+              rest_length.push_back(rLBdx);
+            }
+    			}
+    		}
 
 
         driver.helper = [&](T t, T dt) {
@@ -109,7 +114,6 @@ int main(int argc, char* argv[])
         };
         driver.test="cloth";
     }
-
     else if (strcmp(argv[1], "1") == 0) // volumetric bunny case
     {
         // TODO

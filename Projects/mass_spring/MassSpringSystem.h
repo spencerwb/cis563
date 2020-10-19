@@ -5,11 +5,13 @@
 #include <string>
 #include <fstream>
 
+#include <cmath>
+
 template<class T, int dim>
 class MassSpringSystem{
 public:
     using TV = Eigen::Matrix<T,dim,1>;
-    
+
     std::vector<Eigen::Matrix<int,2,1> > segments;
     std::vector<T> m;
     std::vector<TV> x;
@@ -25,11 +27,24 @@ public:
     void evaluateSpringForces(std::vector<TV >& f)
     {
         // TODO: evaluate spring force
+
     }
 
     void evaluateDampingForces(std::vector<TV >& f)
     {
         // TODO: evaluate damping force
+        int s = segments.size();
+
+        for (int i = 0; i < s; i++) {
+          Eigen::Vector2i seg = segments.at(i);
+          int a = seg(0);
+          int b = seg(1);
+          TV n = x.at(a) - x.at(b);
+          n /= sqrt(n.dot(n));
+          T vRel = (v.at(a) - v.at(b)).dot(n);
+          f.at(a) -= damping_coeff * vRel * n;
+          f.at(b) += damping_coeff * vRel * n;
+        }
     }
 
     void dumpPoly(std::string filename)
