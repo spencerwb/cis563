@@ -62,6 +62,10 @@ int main(int argc, char* argv[])
     		T yWHalf = yW / 2.f;
     		T mN = 1.f;
 
+        youngs_modulus = 1.f;
+        T damping_coeff = 1.f;
+        T dt = 0.01f;
+
         T rLStx = xW / float(xN);
         T rLSty = yW / float(yN);
         T rLSh = sqrt(rLStx * rLStx + rLSty * rLSty);
@@ -129,6 +133,15 @@ int main(int argc, char* argv[])
             3. Choose proper youngs_modulus, damping_coeff, dt
             4. Set boundary condition (node_is_fixed) and helper function (to achieve moving boundary condition).
         */
+
+        ifstream pointsStream("data/points");
+        string line = "";
+        getline(pointsStream, line);
+        std::cout << line << std::endl;
+
+        youngs_modulus = 1.f;
+        T damping_coeff = 1.f;
+        T dt = 0.01f;
 
         driver.helper = [&](T t, T dt) {
             // TODO
