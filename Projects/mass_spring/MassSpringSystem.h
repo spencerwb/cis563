@@ -35,9 +35,10 @@ public:
           int b = seg(1);
           TV n = x.at(a) - x.at(b);
           n /= sqrt(n.dot(n));
-          T vRel = (v.at(a) - v.at(b)).dot(n);
-          f.at(a) -= youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
-          f.at(b) += youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
+          if (!node_is_fixed.at(a))
+              f.at(a) -= youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
+          if (!node_is_fixed.at(b))
+            f.at(b) += youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
         }
     }
 
@@ -53,8 +54,10 @@ public:
           TV n = x.at(a) - x.at(b);
           n /= sqrt(n.dot(n));
           T vRel = (v.at(a) - v.at(b)).dot(n);
-          f.at(a) -= damping_coeff * vRel * n;
-          f.at(b) += damping_coeff * vRel * n;
+          if (!node_is_fixed.at(a))
+              f.at(a) -= damping_coeff * vRel * n;
+          if (!node_is_fixed.at(b))
+              f.at(b) += damping_coeff * vRel * n;
         }
     }
 
