@@ -11,6 +11,8 @@
 
 #include "SimulationDriver.h"
 
+#include <cmath>
+
 int main(int argc, char* argv[])
 {
     using T = float;
@@ -21,7 +23,7 @@ int main(int argc, char* argv[])
 
     // set up mass spring system
     T youngs_modulus = 0;
-    T damping_coeff = 0; 
+    T damping_coeff = 0;
     T dt = 0;
 
     // node data
@@ -34,7 +36,7 @@ int main(int argc, char* argv[])
     std::vector<Eigen::Matrix<int,2,1> > segments;
     std::vector<T> rest_length;
 
-    if (argc < 2) 
+    if (argc < 2)
     {
         std::cout << "Please indicate test case number: 0 (cloth) or 1 (volumetric bunny)" << std::endl;
         exit(0);
@@ -43,14 +45,14 @@ int main(int argc, char* argv[])
     if (strcmp(argv[1], "0") == 0) // cloth case
     {
         // TODO
-        /* 
+        /*
             1. Create node data: position, mass, velocity
             2. Fill segments and rest_length, including struct springs, shearing springs and bending springs.
             3. Choose proper youngs_modulus, damping_coeff and dt.
             4. Set boundary condition (node_is_fixed) and helper function (to achieve moving boundary condition).
             5. Generate quad mesh for rendering.
         */
-	
+
 		int xN = 10;
 		int yN = 10;
 		// int N = xN * yN;
@@ -60,13 +62,57 @@ int main(int argc, char* argv[])
 		T yWHalf = yW / 2.f;
 		T mN = 1.f;
 
-		for (int j = 0; j < xN; j++) {
+    T rLStx = xW / float(xN);
+    T rLSty = yW / float(yN);
+    T rLSh = sqrt(rLStx * rLStx + rLSty * rLSty);
+    T rLBdx = rLStx * 2.f;
+    T rLBdy = rLSty * 2.f;
+
+		for (int j = 0; j < yN; j++) {
 			for (int i = 0; i < xN; i++) {
 				x.push_back(TV(xW/xN - xWHalf, yW/yN - yWHalf, 0.f));
 				v.push_back(TV(0.f, 0.f, 0.f));
 				m.push_back(mN);
 
-				segments.push_back()
+
+        int idx = i + j * xN;
+
+        Eigen::Matrix2i struct1();
+        Eigen::Matrix2i struct2();
+        struct1 << idx, idx + xN;
+        struct2 << idx, idx + 1;
+        if (j < yN - 1) {
+          segments.push_back(struct1);
+          rest_length.push_back(rLSty);
+        }
+        if (i < xN - 1) {
+          segments.push_back(struct2);
+          rest_length.push_back(rLStx);
+        }
+
+        Eigen::Matrix2i shear1();
+        Eigen::Matrix2i shear2();
+        shear1 << idx, idx + 1 + xN;
+        shear2 << idx + 1, idx + xN;
+        if (i < xN - 1 && j < yN - 1) {
+          segments.push_back(shear1);
+          segments.push_back(shear2);
+          rest_length.push_back(rLSh);
+          rest_length.push_back(rLSh);
+        }
+
+        Eigen::Matrix2i bend1();
+        Eigen::Matrix2i bend2();
+        bend1 << idx, idx + 2 * xN;
+        bend2 << idx, idx + 2;
+        if (j < yN - 2) {
+          segments.push_back(bend1);
+          rest_length.push_back(rLBdy);
+        }
+        if (i < xN - 2) {
+          segments.push_back(bend2);
+          rest_length.push_back(rLBdx);
+        }
 			}
 		}
 
@@ -78,11 +124,11 @@ int main(int argc, char* argv[])
     }
 
     else if (strcmp(argv[1], "1") == 0) // volumetric bunny case
-    { 
+    {
         // TODO
-        /* 
-            1. Create node data from data/points: The first line indicates the number of points and dimension (which is 3). 
-            2. Fill segments and rest_length from data/cells: The first line indicates the number of tetrahedra and the number of vertices of each tet (which is 6). Each edge in this tetrahedral mesh will be a segment. Be careful not to create duplicate edges. 
+        /*
+            1. Create node data from data/points: The first line indicates the number of points and dimension (which is 3).
+            2. Fill segments and rest_length from data/cells: The first line indicates the number of tetrahedra and the number of vertices of each tet (which is 6). Each edge in this tetrahedral mesh will be a segment. Be careful not to create duplicate edges.
             3. Choose proper youngs_modulus, damping_coeff, dt
             4. Set boundary condition (node_is_fixed) and helper function (to achieve moving boundary condition).
         */
@@ -99,7 +145,7 @@ int main(int argc, char* argv[])
     }
 
     // simulate
-    
+
     driver.dt = dt;
     driver.ms.segments = segments;
     driver.ms.m = m;
