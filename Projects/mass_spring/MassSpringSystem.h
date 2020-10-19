@@ -27,7 +27,18 @@ public:
     void evaluateSpringForces(std::vector<TV >& f)
     {
         // TODO: evaluate spring force
+        int s = segments.size();
 
+        for (int i = 0; i < s; i++) {
+          Eigen::Vector2i seg = segments.at(i);
+          int a = seg(0);
+          int b = seg(1);
+          TV n = x.at(a) - x.at(b);
+          n /= sqrt(n.dot(n));
+          T vRel = (v.at(a) - v.at(b)).dot(n);
+          f.at(a) -= youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
+          f.at(b) += youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
+        }
     }
 
     void evaluateDampingForces(std::vector<TV >& f)
