@@ -60,10 +60,13 @@ int main(int argc, char* argv[])
 		T yWHalf = yW / 2.f;
 		T mN = 1.f;
 
-		for (int i = 0; i < xN; i++) {
-			for (int j = 0; j < yN; j++) {
+		for (int j = 0; j < xN; j++) {
+			for (int i = 0; i < xN; i++) {
 				x.push_back(TV(xW/xN - xWHalf, yW/yN - yWHalf, 0.f));
+				v.push_back(TV(0.f, 0.f, 0.f));
 				m.push_back(mN);
+
+				segments.push_back()
 			}
 		}
 
