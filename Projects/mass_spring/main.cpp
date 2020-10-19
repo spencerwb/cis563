@@ -134,14 +134,14 @@ int main(int argc, char* argv[])
             4. Set boundary condition (node_is_fixed) and helper function (to achieve moving boundary condition).
         */
 
-        ifstream pointsStream("data/points");
-        string line = "";
+        std::ifstream pointsStream("data/points");
+        std::string line = "";
         getline(pointsStream, line);
         std::cout << line << std::endl;
 
         youngs_modulus = 1.f;
-        T damping_coeff = 1.f;
-        T dt = 0.01f;
+        damping_coeff = 1.f;
+        dt = 0.01f;
 
         driver.helper = [&](T t, T dt) {
             // TODO
