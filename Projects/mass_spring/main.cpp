@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
                                          std::istream_iterator<std::string>());
 
         int n = std::stoi(split.at(0));
-        int dim = sid::stoi(split.at(0));
+        int dim = std::stoi(split.at(0));
 
         std::cout << n << std::endl << dim << std::endl;
 
