@@ -156,12 +156,12 @@ int main(int argc, char* argv[])
             // Output the text from the file
             iss = std::istringstream(line);
             strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
-            TV pt();
+            TV pt = TV();
             for (int i = 0; i < ptsDim; i++) {
-              pt(i) = std::stof(strings.at(i));
+              pt(i, 0) = std::stof(strings.at(i));
             }
             points.insert(std::pair<int, TV>(idx, pt));
-            std::cout << points.at(idx)(0) << " " << points.at(idx)(1) << " " << points.at(idx)(2) << std::endl;
+            std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
             idx++;
         }
 
