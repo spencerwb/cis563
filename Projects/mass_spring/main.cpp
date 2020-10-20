@@ -13,6 +13,7 @@
 
 #include <cmath>
 #include <iterator>
+#include <unordered_map>
 
 int main(int argc, char* argv[])
 {
@@ -144,18 +145,24 @@ int main(int argc, char* argv[])
                                          std::istream_iterator<std::string>());
 
         int n = std::stoi(strings.at(0));
-        int dim = std::stoi(strings.at(1));
+        int ptsDim = std::stoi(strings.at(1));
 
         std::cout << n << std::endl << dim << std::endl;
 
+        std::unordered_map<int, TV> points();
+
+        int idx = 0;
         while (getline(pointsStream, line)) {
             // Output the text from the file
             iss = std::istringstream(line);
             strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
-            for (std::string s : strings) {
-              std::cout << s << std::endl;
-              std::cout << std::stof(s) << std::endl;
+            TV pt();
+            for (int i = 0; i < ptsDim; i++) {
+              pt(i) = std::stof(strings.at(i));
             }
+            points.insert(std::pair<int, TV>(idx, pt));
+            std::cout << points.at(idx)(0) << " " << points.at(idx)(1) << " " << points.at(idx)(2) << std::endl;
+            idx++;
         }
 
         pointsStream.close();
