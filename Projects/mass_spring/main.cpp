@@ -13,6 +13,7 @@
 
 #include <cmath>
 #include <iterator>
+#include <boost/algorithm/string.hpp>
 
 int main(int argc, char* argv[])
 {
@@ -140,18 +141,19 @@ int main(int argc, char* argv[])
         getline(pointsStream, line);
 
         std::istringstream iss(line);
-        std::vector<std::string> split(std::istream_iterator<std::string>{iss},
+        std::vector<std::string> strings(std::istream_iterator<std::string>{iss},
                                          std::istream_iterator<std::string>());
 
-        int n = std::stoi(split.at(0));
-        int dim = std::stoi(split.at(1));
+        int n = std::stoi(strings.at(0));
+        int dim = std::stoi(strings.at(1));
 
         std::cout << n << std::endl << dim << std::endl;
 
         while (getline(pointsStream, line)) {
             // Output the text from the file
-            split = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+            strings = {};
             for (std::string s : split) {
+              std::cout << s << std::endl;
               std::cout << std::stof(s) << std::endl;
             }
         }
