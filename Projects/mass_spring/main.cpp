@@ -160,7 +160,8 @@ int main(int argc, char* argv[])
             for (int i = 0; i < ptsDim; i++) {
               pt(i, 0) = std::stof(strings.at(i));
             }
-            points.insert(std::make_pair<int, TV>(idx, pt));
+            points[idx] = pt;
+            // points.insert(std::make_pair<int, TV>(idx, pt));
             std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
             idx++;
         }
