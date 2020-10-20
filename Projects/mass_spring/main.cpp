@@ -12,6 +12,7 @@
 #include "SimulationDriver.h"
 
 #include <cmath>
+#include <iterator>
 
 int main(int argc, char* argv[])
 {
@@ -142,7 +143,7 @@ int main(int argc, char* argv[])
         std::vector<std::string> split(std::istream_iterator<std::string>{iss},
                                          std::istream_iterator<std::string>());
 
-        int n = std::stoi(plit.at(0));
+        int n = std::stoi(split.at(0));
         int dim = sid::stoi(split.at(0));
 
         std::cout << n << std::endl << dim << std::endl;
