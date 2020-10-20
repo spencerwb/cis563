@@ -13,7 +13,6 @@
 
 #include <cmath>
 #include <iterator>
-#include <boost/algorithm/string.hpp>
 
 int main(int argc, char* argv[])
 {
