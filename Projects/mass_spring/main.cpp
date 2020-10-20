@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
                                          std::istream_iterator<std::string>());
 
         int n = std::stoi(split.at(0));
-        int dim = std::stoi(split.at(0));
+        int dim = std::stoi(split.at(1));
 
         std::cout << n << std::endl << dim << std::endl;
 
@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
             // Output the text from the file
             split = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
             for (std::string s : split) {
-              std::cout << std::stoi(s) << std::endl;
+              std::cout << std::stof(s) << std::endl;
             }
         }
 
