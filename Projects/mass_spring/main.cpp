@@ -150,8 +150,8 @@ int main(int argc, char* argv[])
 
         while (getline(pointsStream, line)) {
             // Output the text from the file
-            strings = {};
-            for (std::string s : split) {
+            strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+            for (std::string s : strings) {
               std::cout << s << std::endl;
               std::cout << std::stof(s) << std::endl;
             }
