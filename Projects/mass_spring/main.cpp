@@ -149,14 +149,14 @@ int main(int argc, char* argv[])
 
         std::cout << n << std::endl << dim << std::endl;
 
-        std::unordered_map<int, TV> points();
+        std::unordered_map<int, TV> points;
 
         int idx = 0;
         while (getline(pointsStream, line)) {
             // Output the text from the file
             iss = std::istringstream(line);
             strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
-            TV pt = TV();
+            TV pt;
             for (int i = 0; i < ptsDim; i++) {
               pt(i, 0) = std::stof(strings.at(i));
             }
