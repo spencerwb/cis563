@@ -137,7 +137,25 @@ int main(int argc, char* argv[])
         std::ifstream pointsStream("data/points");
         std::string line = "";
         getline(pointsStream, line);
-        // std::cout << line << std::endl;
+
+        std::istringstream iss(line);
+        std::vector<std::string> split(std::istream_iterator<std::string>{iss},
+                                         std::istream_iterator<std::string>());
+
+        int n = std::stoi(plit.at(0));
+        int dim = sid::stoi(split.at(0));
+
+        std::cout << n << std::endl << dim << std::endl;
+
+        while (getline(pointsStream, line)) {
+            // Output the text from the file
+            split = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+            for (s : split) {
+              std::cout << std::stoi(s) << std::endl;
+            }
+        }
+
+        pointsStream.close();
 
         youngs_modulus = 1.f;
         damping_coeff = 1.f;
