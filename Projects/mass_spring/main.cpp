@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
               // constructing the face which will eventually be written to an
               // obj file
               faces.push_back(Eigen::Vector4i(idx, idx - 1, idx - 1 - xN, idx - xN));
-              faces.back() = faces.back() + Eigen::Vector4i(1, 1, 1, 1);
+              // faces.back() = faces.back() + Eigen::Vector4i(1, 1, 1, 1);
             }
 
             obj("cloth.obj", x, faces);
