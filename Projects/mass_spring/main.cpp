@@ -47,8 +47,8 @@ int main(int argc, char* argv[])
     SimulationDriver<T,dim> driver;
 
     // set up mass spring system
-    T youngs_modulus = 0;
-    T damping_coeff = 0;
+    T youngs_modulus = 0.f;
+    T damping_coeff = 0.f;
     T dt = 0;
 
     // node data
@@ -90,8 +90,8 @@ int main(int argc, char* argv[])
     		T yWHalf = yW / 2.f;
     		T mN = 1.f;
 
-        youngs_modulus = 1.f;
-        damping_coeff = 1.f;
+        youngs_modulus = 3.f;
+        damping_coeff = 5.f;
         dt = 0.01f;
 
         T rLStx = xW / float(xN);
