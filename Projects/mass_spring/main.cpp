@@ -19,7 +19,7 @@ using T = float;
 constexpr int dim = 3;
 using TV = Eigen::Matrix<T,dim,1>;
 
-int obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& F) {
+void obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& F) {
   std::ofstream fs;
   fs.open(filename);
   int count = 0;
@@ -37,6 +37,7 @@ int obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& 
     fs << "\n";
   }
   fs.close();
+  return;
 }
 
 int main(int argc, char* argv[])
