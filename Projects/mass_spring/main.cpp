@@ -15,7 +15,8 @@
 #include <iterator>
 #include <unordered_map>
 
-
+using T = float;
+constexpr int dim = 3;
 using TV = Eigen::Matrix<T,dim,1>;
 
 int obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& F) {
@@ -40,9 +41,6 @@ int obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& 
 
 int main(int argc, char* argv[])
 {
-    using T = float;
-    constexpr int dim = 3;
-
     SimulationDriver<T,dim> driver;
 
     // set up mass spring system
