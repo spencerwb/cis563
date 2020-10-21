@@ -90,8 +90,8 @@ int main(int argc, char* argv[])
     		T yWHalf = yW / 2.f;
     		T mN = 1.f;
 
-        youngs_modulus = 3.f;
-        damping_coeff = 5.f;
+        youngs_modulus = 30.f;
+        damping_coeff = 50.f;
         dt = 0.01f;
 
         T rLStx = xW / float(xN);
@@ -145,7 +145,6 @@ int main(int argc, char* argv[])
               // constructing the face which will eventually be written to an
               // obj file
               faces.push_back(Eigen::Vector4i(idx, idx - 1, idx - 1 - xN, idx - xN));
-              // faces.back() = faces.back() + Eigen::Vector4i(1, 1, 1, 1);
             }
 
             obj("cloth.obj", x, faces);
