@@ -17,6 +17,8 @@ string
 -
 fstream
 -
+cmath
+-
 
 /home/spencer/academic/cis563/Projects/mass_spring/SimulationDriver.h
 Eigen/Sparse
@@ -55,6 +57,12 @@ unordered_set
 -
 SimulationDriver.h
 /home/spencer/academic/cis563/Projects/mass_spring/SimulationDriver.h
+cmath
+-
+iterator
+-
+unordered_map
+-
 
 /usr/include/eigen3/Eigen/Cholesky
 Core
