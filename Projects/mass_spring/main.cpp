@@ -15,11 +15,33 @@
 #include <iterator>
 #include <unordered_map>
 
+
+using TV = Eigen::Matrix<T,dim,1>;
+
+int obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& F) {
+  std::ofstream fs;
+  fs.open(filename);
+  int count = 0;
+  for (TV x : X) {
+      fs << "v";
+      for (int i = 0; i < 3; i++)
+          fs << " " << x(i);
+      fs << "\n";
+      count++;
+  }
+  for (Eigen::Vector4i f : F) {
+    f += Eigen::Vector4i(1, 1, 1, 1);
+    for (int i = 0; i < 4; i++)
+        fs << " " << f(i);
+    fs << "\n";
+  }
+  fs.close();
+}
+
 int main(int argc, char* argv[])
 {
     using T = float;
     constexpr int dim = 3;
-    using TV = Eigen::Matrix<T,dim,1>;
 
     SimulationDriver<T,dim> driver;
 
@@ -35,8 +57,11 @@ int main(int argc, char* argv[])
     std::vector<bool> node_is_fixed;
 
     // segment data
-    std::vector<Eigen::Matrix<int,2,1> > segments;
+    std::vector<Eigen::Matrix<int,2,1>> segments;
     std::vector<T> rest_length;
+
+    // face data
+    std::vector<Eigen::Vector4i> faces;
 
     if (argc < 2)
     {
@@ -111,6 +136,18 @@ int main(int argc, char* argv[])
               segments.push_back(Eigen::Vector2i(idx, idx + 2));
               rest_length.push_back(rLBdx);
             }
+
+            if (i > 0 && j > 0) {
+              // the current point should be the bottom right corner
+              // of its face. this vertex will be responsible for
+              // constructing the face which will eventually be written to an
+              // obj file
+              faces.push_back(Eigen::Vector4i(idx, idx - 1, idx - 1 - xN, idx - xN));
+              faces.back() = faces.back() + Eigen::Vector4i(1, 1, 1, 1);
+            }
+
+            obj("cloth.obj", x, faces);
+
     			}
     		}
 
@@ -162,7 +199,7 @@ int main(int argc, char* argv[])
             }
             points[idx] = pt;
             // points.insert(std::make_pair<int, TV>(idx, pt));
-            std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
+            // std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
             idx++;
         }
 
