@@ -15,6 +15,7 @@
 #include <iterator>
 #include <unordered_map>
 
+// type definitions
 using T = float;
 constexpr int dim = 3;
 using TV = Eigen::Matrix<T,dim,1>;
@@ -100,7 +101,7 @@ int main(int argc, char* argv[])
 
     		for (int j = 0; j < yN; j++) {
     			for (int i = 0; i < xN; i++) {
-    				x.push_back(TV(xW/xN - xWHalf, yW/yN - yWHalf, 0.f));
+    				x.push_back(TV(xW/xN * i - xWHalf, yW/yN * j - yWHalf, 0.f));
     				v.push_back(TV(0.f, 0.f, 0.f));
     				m.push_back(mN);
             std::cout << x.back()(0,0) << " " << x.back()(1,0) << " " << x.back()(2,0) << std::endl;
