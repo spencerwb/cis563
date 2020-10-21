@@ -69,7 +69,7 @@ public:
                 ms.v.at(i) += (dt * (gravity + f_spring.at(i) + f_damping.at(i)) / ms.m.at(i));
 
 
-                ms.x.at(i) += dt * 50.f;
+                ms.x.at(i) += TV(0.f, 0.f, dt * 50.f);
             }
         }
     }
