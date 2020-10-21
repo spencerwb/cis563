@@ -33,6 +33,7 @@ void obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>&
   }
   for (Eigen::Vector4i f : F) {
     f += Eigen::Vector4i(1, 1, 1, 1);
+    fs << "f";
     for (int i = 0; i < 4; i++)
         fs << " " << f(i);
     fs << "\n";
