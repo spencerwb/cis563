@@ -83,16 +83,16 @@ int main(int argc, char* argv[])
 
     		int xN = 10;
     		int yN = 10;
-    		// int N = xN * yN;
+    		int N = xN * yN;
     		T xW = 1.f;
     		T yW = 1.f;
     		T xWHalf = xW / 2.f;
     		T yWHalf = yW / 2.f;
-    		T mN = 1.f;
+    		T mN = 18.f / N;
 
-        youngs_modulus = 30.f;
-        damping_coeff = 50.f;
-        dt = 0.01f;
+        youngs_modulus = 5.3f;
+        damping_coeff = 2.5f;
+        dt = 0.0001f;
 
         T rLStx = xW / float(xN);
         T rLSty = yW / float(yN);
