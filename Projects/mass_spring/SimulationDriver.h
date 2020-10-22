@@ -38,6 +38,9 @@ public:
         ms.dumpPoly(filename);
         for(int frame=1; frame<=max_frame; frame++) {
             std::cout << "Frame " << frame << std::endl;
+            // this is necessary so that you know how many time steps have occurred
+            // between each frame. this calculation assumes that the frame rate is
+            // 24 frames per second.
             int N_substeps = (int)(((T)1/24)/dt);
             for (int step = 1; step <= N_substeps; step++) {
                 // std::cout << "Step " << step << std::endl;

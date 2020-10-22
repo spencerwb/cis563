@@ -39,24 +39,28 @@ public:
           T l = sqrt(n.dot(n));
           n /= l;
 
-          std::cout << i << std::endl;
           T test1 = l / rest_length.at(i);
           T test2 = youngs_modulus;
           T test4 = youngs_modulus * (l / rest_length.at(i) - 1.f);
           TV test5 = (l / rest_length.at(i) - 1.f) * n;
           if (test1 != test1) {
+            std::cout << i << std::endl;
             std::cout << "ERROR: l/l0 is nan" << std::endl;
           }
           if (test2 != test2) {
+            std::cout << i << std::endl;
             std::cout << "ERROR: youngs_modulus is nan" << std::endl;
           }
           if (n != n) {
+            std::cout << i << std::endl;
             std::cout << "ERROR: normal is nan" << std::endl;
           }
           if (test4 != test4) {
+            std::cout << i << std::endl;
             std::cout << "ERROR: youngs_modulus prod w/ i/i0 is nan" << std::endl;
           }
           if (test5 != test5) {
+            std::cout << i << std::endl;
             std::cout << "ERROR: l/l0 prod w/ n is nan" << std::endl;
           }
           // compute the spring force with teh youngs modulus model
