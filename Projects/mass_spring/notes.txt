@@ -1,1 +1,10 @@
+To render the video, go to the render node which is probably already in the project. You can see it if you go to the tree view.
+Go to Render > Edit Render Parameters
+There should be a button for render to disk. CLick that to create the image sequence.
+Then to make a video open one image in potoshop and clike the image sequence check box.
+Change the workspace to motion
+Go to export then render video
+
+the $HIP environment variable (which contains the parent path of the scene file) to locate files relative to the scene file’s location. This lets you move the files between directories or between computers without having to change all the paths.
+
 This is an explicit naive mass spring simulator with forward Euler.
