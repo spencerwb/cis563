@@ -39,23 +39,26 @@ public:
           T l = sqrt(n.dot(n));
           n /= l;
 
-          T test1 = l / rest_length.at(i);
+          // T test1 = l / rest_length.at(i);
           // T test2 = youngs_modulus;
           // T test4 = youngs_modulus * (l / rest_length.at(i) - 1.f);
           // TV test5 = (l / rest_length.at(i) - 1.f) * n;
-          if (test1 != test1) {
-            std::cout << i << std::endl;
-            std::cout << "ERROR: l/l0 is nan" << std::endl;
-            std::cout << l << " / " << rest_length.at(i) << std::endl;
-          }
+          // if (test1 != test1) {
+          //   std::cout << i << std::endl;
+          //   std::cout << "ERROR: l/l0 is nan" << std::endl;
+          //   std::cout << l << " / " << rest_length.at(i) << std::endl;
+          //   std::cout <<
+          // }
           // if (test2 != test2) {
           //   std::cout << i << std::endl;
           //   std::cout << "ERROR: youngs_modulus is nan" << std::endl;
           // }
-          // if (n != n) {
-          //   std::cout << i << std::endl;
-          //   std::cout << "ERROR: normal is nan" << std::endl;
-          // }
+          if (n != n) {
+            std::cout << i << std::endl;
+            std::cout << "ERROR: normal is nan: " << n(0, 0) << ", " << n(1, 0) << ", " << n(2, 0);
+            std::cout << "x_a: " << x.at(a)(0, 0) << ", " << x.at(a)(1, 0) << ", " << x.at(a)(2, 0);
+            std::cout << "x_b: " << x.at(b)(0, 0) << ", " << x.at(b)(1, 0) << ", " << x.at(b)(2, 0);
+          }
           // if (test4 != test4) {
           //   std::cout << i << std::endl;
           //   std::cout << "ERROR: youngs_modulus prod w/ i/i0 is nan" << std::endl;
