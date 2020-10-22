@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
     				v.push_back(TV(0.f, 0.f, 0.f));
     				m.push_back(mN);
             std::cout << x.back()(0,0) << " " << x.back()(1,0) << " " << x.back()(2,0) << std::endl;
-            if ((i == 0 && j == 0) || (i == xN - 1 && j == 0)) {
+            if ((i == 0 && j == yN - 1) || (i == xN - 1 && j == yN - 1)) {
               node_is_fixed.push_back(true);
             } else {
               node_is_fixed.push_back(false);

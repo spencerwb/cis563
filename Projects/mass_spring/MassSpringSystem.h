@@ -33,12 +33,15 @@ public:
           Eigen::Vector2i seg = segments.at(i);
           int a = seg(0);
           int b = seg(1);
+          // computing the normalized direction vector
+          // and length of the segment
           TV n = x.at(a) - x.at(b);
-          n /= sqrt(n.dot(n));
+          T l = sqrt(n.dot(n));
+          n /= l;
           if (!node_is_fixed.at(a))
-              f.at(a) -= youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
+              f.at(a) -= youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
           if (!node_is_fixed.at(b))
-            f.at(b) += youngs_modulus * (1.f / rest_length.at(i) - 1.f) * n;
+            f.at(b) += youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
         }
     }
 
