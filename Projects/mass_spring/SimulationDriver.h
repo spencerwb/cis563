@@ -40,7 +40,7 @@ public:
             std::cout << "Frame " << frame << std::endl;
             int N_substeps = (int)(((T)1/24)/dt);
             for (int step = 1; step <= N_substeps; step++) {
-                std::cout << "Step " << step << std::endl;
+                // std::cout << "Step " << step << std::endl;
                 helper(accumulate_t, dt);
                 advanceOneStepExplicitIntegration();
                 accumulate_t += dt;
