@@ -94,6 +94,8 @@ int main(int argc, char* argv[])
         damping_coeff = 100.f;
         dt = 0.0001f;
 
+        // rest displacement will be the starting length of
+        // each segment
         T rLStx = xW / float(xN);
         T rLSty = yW / float(yN);
         T rLSh = sqrt(rLStx * rLStx + rLSty * rLSty);
@@ -106,7 +108,7 @@ int main(int argc, char* argv[])
     				v.push_back(TV(0.f, 0.f, 0.f));
     				m.push_back(mN);
             std::cout << x.back()(0,0) << " " << x.back()(1,0) << " " << x.back()(2,0) << std::endl;
-            if ((i == 0 && j == 0) || (i == 0 && j == yN - 1)) {
+            if ((i == 0 && j == 0) || (i == xN - 1 && j == 0)) {
               node_is_fixed.push_back(true);
             } else {
               node_is_fixed.push_back(false);
@@ -158,7 +160,7 @@ int main(int argc, char* argv[])
             int n = driver.ms.m.size();
             for (int i = 0; i < n; i++) {
                 if (driver.ms.node_is_fixed.at(i)) {
-                    driver.ms.x.at(i) += TV(0.f, 0.f, 10.f * dt);
+                    driver.ms.x.at(i) += TV(0.f, 0.f, 1.f * dt);
                 }
             }
         };
