@@ -66,7 +66,7 @@ public:
         for (int i = 0; i < n; i++) {
             if (!ms.node_is_fixed.at(i)) {
                 // ms.v.at(i) += (dt * (gravity + f_spring.at(i) + f_damping.at(i)) / ms.m.at(i));
-                if (f_spring.at(i) == nan || f_spring.at(i) == -nan)
+                if (f_spring.at(i) == nan)
                   std::cout << "ERROR: spring force" << std::endl;
                 ms.v.at(i) += (dt * (gravity + f_spring.at(i)) / ms.m.at(i));
                 ms.x.at(i) += (dt * ms.v.at(i));
