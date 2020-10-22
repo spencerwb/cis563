@@ -37,11 +37,13 @@ public:
           // and length of the segment
           TV n = x.at(a) - x.at(b);
           T l = sqrt(n.dot(n));
+          if (l == 0.f) {
+            std::cout << "ERROR: " << l << std::endl;
+          }
           n /= l;
-          if (!node_is_fixed.at(a))
-              f.at(a) -= youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
-          if (!node_is_fixed.at(b))
-            f.at(b) += youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
+          // compute the spring force with teh youngs modulus model
+          f.at(a) -= youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
+          f.at(b) += youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
         }
     }
 
