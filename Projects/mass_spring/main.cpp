@@ -184,7 +184,8 @@ int main(int argc, char* argv[])
         std::vector<std::string> strings(std::istream_iterator<std::string>{iss},
                                          std::istream_iterator<std::string>());
 
-        int n = std::stoi(strings.at(0));
+        // contains the dimension of the points which is 3
+        // int n = std::stoi(strings.at(0));
         int ptsDim = std::stoi(strings.at(1));
 
         std::unordered_map<int, TV> points;
