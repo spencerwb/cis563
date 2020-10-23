@@ -72,6 +72,7 @@ public:
             std::cout << "sqrt of n dot n: " << sqrt(n.dot(n)) << std::endl;
             std::cout << "x_a: " << x.at(a)(0, 0) << ", " << x.at(a)(1, 0) << ", " << x.at(a)(2, 0) << std::endl;
             std::cout << "x_b: " << x.at(b)(0, 0) << ", " << x.at(b)(1, 0) << ", " << x.at(b)(2, 0) << std::endl;
+            l = 0.f;
           }
           if (l == 0.f) {
             std::cout << i << std::endl;
