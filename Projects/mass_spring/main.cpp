@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
     				x.push_back(TV(xW/xN * i - xWHalf, yW/yN * j - yWHalf, 0.f));
     				v.push_back(TV(0.f, 0.f, 0.f));
     				m.push_back(mN);
-            std::cout << x.back()(0,0) << " " << x.back()(1,0) << " " << x.back()(2,0) << std::endl;
+            // std::cout << x.back()(0,0) << " " << x.back()(1,0) << " " << x.back()(2,0) << std::endl;
             if ((i == 0 && j == yN - 1) || (i == xN - 1 && j == yN - 1)) {
               node_is_fixed.push_back(true);
             } else {
@@ -186,8 +186,6 @@ int main(int argc, char* argv[])
 
         int n = std::stoi(strings.at(0));
         int ptsDim = std::stoi(strings.at(1));
-
-        std::cout << n << std::endl << dim << std::endl;
 
         std::unordered_map<int, TV> points;
 
