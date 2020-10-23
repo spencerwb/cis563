@@ -81,16 +81,16 @@ int main(int argc, char* argv[])
             5. Generate quad mesh for rendering.
         */
 
-    		int xN = 10;
-    		int yN = 10;
+    		int xN = 64;
+    		int yN = 64;
     		int N = xN * yN;
-    		T xW = 1.f;
-    		T yW = 1.f;
+    		T xW = 4.f;
+    		T yW = 4.f;
     		T xWHalf = xW / 2.f;
     		T yWHalf = yW / 2.f;
-    		T mN = 100.f / N;
+    		T mN = 1000.f / N;
 
-        youngs_modulus = 100.f;
+        youngs_modulus = 200.f;
         damping_coeff = 100.f;
         dt = 0.0001f;
 
