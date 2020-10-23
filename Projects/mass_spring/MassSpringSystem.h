@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include <cmath>
+#include <math.h>
 
 template<class T, int dim>
 class MassSpringSystem{
