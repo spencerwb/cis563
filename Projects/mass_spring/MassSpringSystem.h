@@ -65,8 +65,9 @@ public:
             std::cout << "ERROR: l is nan: " << l << std::endl;
           }
           if (isinf(l)) {
-            std::cout << i << std::endl;
+            std::cout << a << ", " << b << std::endl;
             std::cout << "ERROR: l is inf: " << l << std::endl;
+            std::cout << "n causing inf: " << n(0, 0) << ", " << n(1, 0) << ", " << n(2, 0) << std::endl;
           }
           if (l == 0.f) {
             std::cout << i << std::endl;
@@ -85,8 +86,8 @@ public:
 
           // compute the spring force with teh youngs modulus model
           // l = 1.f;
-          f.at(a) += youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
-          f.at(b) -= youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
+          f.at(a) -= youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
+          f.at(b) += youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
         }
     }
 
