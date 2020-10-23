@@ -68,8 +68,8 @@ public:
             std::cout << a << ", " << b << std::endl;
             std::cout << "ERROR: l is inf: " << l << std::endl;
             std::cout << "n causing inf: " << n(0, 0) << ", " << n(1, 0) << ", " << n(2, 0) << std::endl;
-            std::Cout << "n dot n: " << n.dot(n) << std::endl;
-            std::Cout << "sqrt of n dot n: " << sqrt(n.dot(n)) << std::endl;
+            std::cout << "n dot n: " << n.dot(n) << std::endl;
+            std::cout << "sqrt of n dot n: " << sqrt(n.dot(n)) << std::endl;
             std::cout << "x_a: " << x.at(a)(0, 0) << ", " << x.at(a)(1, 0) << ", " << x.at(a)(2, 0) << std::endl;
             std::cout << "x_b: " << x.at(b)(0, 0) << ", " << x.at(b)(1, 0) << ", " << x.at(b)(2, 0) << std::endl;
           }
