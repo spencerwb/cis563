@@ -19,6 +19,8 @@ fstream
 -
 cmath
 -
+math.h
+-
 
 /home/spencer/academic/cis563/Projects/mass_spring/SimulationDriver.h
 Eigen/Sparse
