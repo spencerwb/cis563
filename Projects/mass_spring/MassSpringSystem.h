@@ -63,6 +63,14 @@ public:
             std::cout << i << std::endl;
             std::cout << "ERROR: l is nan: " << l << std::endl;
           }
+          if (isinf(l)) {
+            std::cout << i << std::endl;
+            std::cout << "ERROR: l is inf: " << l << std::endl;
+          }
+          if (l == 0.f) {
+            std::cout << i << std::endl;
+            std::cout << "ERROR: l is zero: " << l << std::endl;
+          }
           // if (test4 != test4) {
           //   std::cout << i << std::endl;
           //   std::cout << "ERROR: youngs_modulus prod w/ i/i0 is nan" << std::endl;
