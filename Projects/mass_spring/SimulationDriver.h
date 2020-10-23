@@ -74,7 +74,7 @@ public:
                 // is always a true statement
                 // ms.v.at(i) += (dt * (gravity + f_spring.at(i)) / ms.m.at(i));
                 ms.x.at(i) += (dt * ms.v.at(i));
-                if (x.at(i) != x.at(i))
+                if (ms.x.at(i) != ms.x.at(i))
                   std::cout << "ERROR: point " << i << std::endl;
                 if (f_spring.at(i) != f_spring.at(i))
                   std::cout << "ERROR: spring force" << std::endl;
