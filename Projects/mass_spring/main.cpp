@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
     		T yW = 10.f;
     		T xWHalf = xW / 2.f;
     		T yWHalf = yW / 2.f;
-    		T mN = 1000.f / N;
+    		T mN = 100000.f / N;
 
         youngs_modulus = 0.05f;
         damping_coeff = 0.002f;
