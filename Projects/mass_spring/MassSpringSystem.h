@@ -55,9 +55,9 @@ public:
           // }
           if (n != n) {
             std::cout << i << std::endl;
-            std::cout << "ERROR: normal is nan: " << n(0, 0) << ", " << n(1, 0) << ", " << n(2, 0);
-            std::cout << "x_a: " << x.at(a)(0, 0) << ", " << x.at(a)(1, 0) << ", " << x.at(a)(2, 0);
-            std::cout << "x_b: " << x.at(b)(0, 0) << ", " << x.at(b)(1, 0) << ", " << x.at(b)(2, 0);
+            std::cout << "ERROR: normal is nan: " << n(0, 0) << ", " << n(1, 0) << ", " << n(2, 0) << std::endl;
+            std::cout << "x_a: " << x.at(a)(0, 0) << ", " << x.at(a)(1, 0) << ", " << x.at(a)(2, 0) << std::endl;
+            std::cout << "x_b: " << x.at(b)(0, 0) << ", " << x.at(b)(1, 0) << ", " << x.at(b)(2, 0) << std::endl;
           }
           // if (test4 != test4) {
           //   std::cout << i << std::endl;
