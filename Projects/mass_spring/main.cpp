@@ -57,8 +57,9 @@ int main(int argc, char* argv[])
     std::vector<TV> v;
     std::vector<bool> node_is_fixed;
 
-    // segment data
+    // segment/spring data
     std::vector<Eigen::Matrix<int,2,1>> segments;
+    std::vector<Eigen::Matrix<int,2,1>> springs;
     std::vector<T> rest_length;
 
     // face data
@@ -116,28 +117,33 @@ int main(int argc, char* argv[])
 
             int idx = i + j * xN;
 
+            // structural springs
             if (j < yN - 1) {
               segments.push_back(Eigen::Vector2i(idx, idx + xN));
+              springs.push_back(Eigen::Vector2i(idx, idx + xN));
               rest_length.push_back(rLSty);
             }
             if (i < xN - 1) {
               segments.push_back(Eigen::Vector2i(idx, idx + 1));
+              springs.push_back(Eigen::Vector2i(idx, idx + 1));
               rest_length.push_back(rLStx);
             }
 
+            // shear springs
             if (i < xN - 1 && j < yN - 1) {
-              segments.push_back(Eigen::Vector2i(idx, idx + 1 + xN));
-              segments.push_back(Eigen::Vector2i(idx + 1, idx + xN));
+              springs.push_back(Eigen::Vector2i(idx, idx + 1 + xN));
+              springs.push_back(Eigen::Vector2i(idx + 1, idx + xN));
               rest_length.push_back(rLSh);
               rest_length.push_back(rLSh);
             }
 
+            // bend (flexion) springs
             if (j < yN - 2) {
-              segments.push_back(Eigen::Vector2i(idx, idx + 2 * xN));
+              springs.push_back(Eigen::Vector2i(idx, idx + 2 * xN));
               rest_length.push_back(rLBdy);
             }
             if (i < xN - 2) {
-              segments.push_back(Eigen::Vector2i(idx, idx + 2));
+              springs.push_back(Eigen::Vector2i(idx, idx + 2));
               rest_length.push_back(rLBdx);
             }
 
@@ -226,6 +232,7 @@ int main(int argc, char* argv[])
 
     driver.dt = dt;
     driver.ms.segments = segments;
+    driver.ms.springs = springs;
     driver.ms.m = m;
     driver.ms.v = v;
     driver.ms.x = x;

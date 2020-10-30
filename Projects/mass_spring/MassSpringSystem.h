@@ -14,6 +14,7 @@ public:
     using TV = Eigen::Matrix<T,dim,1>;
 
     std::vector<Eigen::Matrix<int,2,1> > segments;
+    std::vector<Eigen::Matrix<int,2,1> > springs;
     std::vector<T> m;
     std::vector<TV> x;
     std::vector<TV> v;
@@ -28,10 +29,10 @@ public:
     void evaluateSpringForces(std::vector<TV >& f)
     {
         // TODO: evaluate spring force
-        int s = segments.size();
+        int s = springs.size();
 
         for (int i = 0; i < s; i++) {
-          Eigen::Vector2i seg = segments.at(i);
+          Eigen::Vector2i seg = springs.at(i);
           int a = seg(0);
           int b = seg(1);
           // computing the normalized direction vector
@@ -99,10 +100,10 @@ public:
     void evaluateDampingForces(std::vector<TV >& f)
     {
         // TODO: evaluate damping force
-        int s = segments.size();
+        int s = springs.size();
 
         for (int i = 0; i < s; i++) {
-          Eigen::Vector2i seg = segments.at(i);
+          Eigen::Vector2i seg = springs.at(i);
           int a = seg(0);
           int b = seg(1);
           TV n = x.at(a) - x.at(b);
