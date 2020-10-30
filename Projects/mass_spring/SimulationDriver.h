@@ -72,8 +72,8 @@ public:
                 // if the force matrix contains any nan values
                 // the inequality expression will return true since NaN != NaN
                 // is always a true statement
-                // ms.v.at(i) += (dt * (gravity + f_spring.at(i)) / ms.m.at(i));
-                ms.v.at(i) += (dt * (gravity) / ms.m.at(i));
+                ms.v.at(i) += (dt * (gravity + f_spring.at(i)) / ms.m.at(i));
+                // ms.v.at(i) += (dt * (gravity) / ms.m.at(i));
                 ms.x.at(i) += (dt * ms.v.at(i));
                 if (ms.x.at(i) != ms.x.at(i))
                   std::cout << "ERROR: point " << i << std::endl;
