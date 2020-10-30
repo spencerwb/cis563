@@ -61,6 +61,7 @@ public:
     {
         int n = ms.m.size();
         std::vector<TV> f_spring(n);
+        f_spring.resize(n, 0.f);
         ms.evaluateSpringForces(f_spring);
 	    std::vector<TV> f_damping(n);
 	    ms.evaluateDampingForces(f_damping);
