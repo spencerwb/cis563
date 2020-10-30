@@ -91,8 +91,8 @@ int main(int argc, char* argv[])
     		T yWHalf = yW / 2.f;
     		T mN = 10.f / N;
 
-        youngs_modulus = 20.f;
-        damping_coeff = 1.f;
+        youngs_modulus = 15.f;
+        damping_coeff = 5.f;
         dt = 0.0001f;
 
         // rest displacement will be the starting length of
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
             int n = driver.ms.m.size();
             for (int i = 0; i < n; i++) {
                 if (driver.ms.node_is_fixed.at(i)) {
-                    driver.ms.x.at(i) += TV(0.f, 0.f, .5f * dt);
+                    driver.ms.x.at(i) += TV(0.f, 0.f, 1.f * dt);
                 }
             }
         };
