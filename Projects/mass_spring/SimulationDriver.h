@@ -62,8 +62,8 @@ public:
         int n = ms.m.size();
         std::vector<TV> f_spring(n);
         ms.evaluateSpringForces(f_spring);
-	      std::vector<TV> f_damping(n);
-	      ms.evaluateDampingForces(f_damping);
+	    std::vector<TV> f_damping(n);
+	    ms.evaluateDampingForces(f_damping);
 
         // TODO: update position and velocity according to Newton's law.
         for (int i = 0; i < n; i++) {
