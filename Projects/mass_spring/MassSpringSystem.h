@@ -108,10 +108,8 @@ public:
           TV n = x.at(a) - x.at(b);
           n /= sqrt(n.dot(n));
           T vRel = (v.at(a) - v.at(b)).dot(n);
-          if (!node_is_fixed.at(a))
-              f.at(a) -= damping_coeff * vRel * n;
-          if (!node_is_fixed.at(b))
-              f.at(b) += damping_coeff * vRel * n;
+          f.at(a) -= damping_coeff * vRel * n;
+          f.at(b) += damping_coeff * vRel * n;
         }
     }
 
