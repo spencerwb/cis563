@@ -85,8 +85,8 @@ int main(int argc, char* argv[])
     		int xN = 20;
     		int yN = 20;
     		int N = xN * yN;
-    		T xW = 10.f;
-    		T yW = 10.f;
+    		T xW = 5.f;
+    		T yW = 5.f;
     		T xWHalf = xW / 2.f;
     		T yWHalf = yW / 2.f;
     		T mN = 5.f / N;

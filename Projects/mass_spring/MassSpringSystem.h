@@ -91,7 +91,6 @@ public:
           // if (isinf(l))
 
           // compute the spring force with teh youngs modulus model
-          // l = 1.f;
           f.at(a) -= youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
           f.at(b) += youngs_modulus * (l / rest_length.at(i) - 1.f) * n;
         }
