@@ -91,8 +91,8 @@ int main(int argc, char* argv[])
     		T yWHalf = yW / 2.f;
     		T mN = 5.f / N;
 
-        youngs_modulus = 20.f;
-        damping_coeff = 5.f;
+        youngs_modulus = 30.f;
+        damping_coeff = 4.f;
         dt = 0.0001f;
 
         // rest displacement will be the starting length of
