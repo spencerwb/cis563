@@ -60,10 +60,9 @@ public:
     void advanceOneStepExplicitIntegration()
     {
         int n = ms.m.size();
-        std::vector<TV> f_spring(n);
-        f_spring.resize(n, 0.f);
+        std::vector<TV> f_spring(n, TV(0.f, 0.f, 0.f));
         ms.evaluateSpringForces(f_spring);
-	    std::vector<TV> f_damping(n);
+	    std::vector<TV> f_damping(n, TV(0.f, 0.f, 0.f));
 	    ms.evaluateDampingForces(f_damping);
 
         // TODO: update position and velocity according to Newton's law.
