@@ -8,3 +8,8 @@ Go to export then render video
 the $HIP environment variable (which contains the parent path of the scene file) to locate files relative to the scene file’s location. This lets you move the files between directories or between computers without having to change all the paths.
 
 This is an explicit naive mass spring simulator with forward Euler.
+
+Ok, so now it is finally kind of working. I dont know which one of these things fixed the
+problem, but I changed the force vectors so that they are initialized to zero at the
+start of every simulation step. I added the springs vector because I was storing non-geometric
+springs in the segment vector which is for animating points in the geometry.
