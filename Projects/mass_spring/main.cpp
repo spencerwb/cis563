@@ -82,8 +82,8 @@ int main(int argc, char* argv[])
             5. Generate quad mesh for rendering.
         */
 
-    		int xN = 10;
-    		int yN = 10;
+    		int xN = 20;
+    		int yN = 20;
     		int N = xN * yN;
     		T xW = 10.f;
     		T yW = 10.f;
