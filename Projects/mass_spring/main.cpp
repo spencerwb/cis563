@@ -252,7 +252,7 @@ int main(int argc, char* argv[])
 
         // parameters
         int n = x.size();
-        T mN = 5.f / n;
+        T mN = 0.f / n;
 
         youngs_modulus = 1.f;
         damping_coeff = 1.f;
@@ -271,7 +271,7 @@ int main(int argc, char* argv[])
             // TODO
             int n = driver.ms.m.size();
             for (int i = 0; i < n; i++) {
-                if (driver.ms.node_is_fixed.at(i)) {
+                if (driver.ms.node_is_fixed.at(i) || !driver.ms.node_is_fixed.at(i)) {
                     driver.ms.x.at(i) += TV(0.f, 0.f, 1.f * dt);
                 }
             }

@@ -67,7 +67,7 @@ public:
 
         // TODO: update position and velocity according to Newton's law.
         for (int i = 0; i < n; i++) {
-            if (!ms.node_is_fixed.at(i)) {
+            if (!ms.node_is_fixed.at(i) && ms.m.at(i)) {
                 ms.v.at(i) += (dt * (gravity + f_spring.at(i) + f_damping.at(i)) / ms.m.at(i));
                 // if the force matrix contains any nan values
                 // the inequality expression will return true since NaN != NaN
