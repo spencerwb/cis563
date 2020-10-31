@@ -272,7 +272,7 @@ int main(int argc, char* argv[])
             int n = driver.ms.m.size();
             for (int i = 0; i < n; i++) {
                 if (driver.ms.node_is_fixed.at(i)) {
-                    driver.ms.x.at(i) += TV(0.f, 0.f, 1.f * dt);
+                    driver.ms.x.at(i) += TV(0.f, 0.f, 0.3f * dt);
                 }
             }
         };
