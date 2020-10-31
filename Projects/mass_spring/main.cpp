@@ -20,7 +20,7 @@ using T = float;
 constexpr int dim = 3;
 using TV = Eigen::Matrix<T,dim,1>;
 
-void obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& F) {
+void writeObj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>& F) {
   std::ofstream fs;
   fs.open(filename);
   int count = 0;
@@ -41,6 +41,71 @@ void obj(std::string filename, std::vector<TV>& X, std::vector<Eigen::Vector4i>&
   fs.close();
   return;
 }
+
+void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::vector<T> RL) {
+  std::ifstream pointsStream("data/points");
+  std::string line = "";
+  getline(pointsStream, line);
+
+  std::istringstream iss(line);
+  std::vector<std::string> strings(std::istream_iterator<std::string>{iss},
+                                    std::istream_iterator<std::string>());
+
+  // contains the dimension of the points which is 3
+  // int n = std::stoi(strings.at(0));
+  int ptsDim = std::stoi(strings.at(1));
+
+  while (getline(pointsStream, line)) {
+      iss = std::istringstream(line);
+      strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+      TV pt;
+      for (int i = 0; i < ptsDim; i++) {
+        pt(i, 0) = std::stof(strings.at(i));
+      }
+      X.push_back(pt);
+      // points.insert(std::make_pair<int, TV>(idx, pt));
+      // std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
+  }
+
+  pointsStream.close();
+
+  // read in data from cells to obtain the topology
+  // of the model
+  std::ifstream cellsStream("data/cells");
+  getline(pointsStream, line);
+  iss = std::istringstream(line);
+  strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+  // int numFaces = std::stoi(strings.at(0));
+  int sidesPerPoly = std::stoi(strings.at(1));
+
+  std::unordered_map<long long int, Eigen::Matrix<int,2,1>> uniqueSegments;
+
+  while (getline(cellsStream, line)) {
+    iss = std::istringstream(line);
+    strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+    for (int i = 0; i < sidesPerPoly && (((long unsigned int)i) < strings.size()); i++) {
+      long long int segIdx1 = 0;
+      long long int segIdx2 = 0;
+      int pt1 = std::stoi(strings.at(i));
+      int pt2 = std::stoi(strings.at((i + 1) % sidesPerPoly));
+      segIdx1 = pt1;
+      segIdx1 |= ((long long int)pt2 << 32);
+      segIdx2 = pt2;
+      segIdx2 |= ((long long int)pt1 << 32);
+      // check both orderings of the pt indices in the segIdx
+      if (!uniqueSegments.count(segIdx1) && !uniqueSegments.count(segIdx2)) {
+        uniqueSegments[segIdx1] = Eigen::Matrix<int,2,1>(pt1, pt2);
+        S.push_back(Eigen::Matrix<int,2,1>(pt1, pt2));
+        RL.push_back(sqrt((X.at(pt1) - X.at(pt2)).transpose() * (X.at(pt1) - X.at(pt2))));
+      }
+    }
+  }
+
+  cellsStream.close();
+}
+
+
+
 
 int main(int argc, char* argv[])
 {
@@ -154,11 +219,10 @@ int main(int argc, char* argv[])
               // obj file
               faces.push_back(Eigen::Vector4i(idx, idx - 1, idx - 1 - xN, idx - xN));
             }
-
-            obj("cloth.obj", x, faces);
-
     			}
     		}
+
+        writeObj("cloth.obj", x, faces);
 
 
         driver.helper = [&](T t, T dt) {
@@ -170,66 +234,55 @@ int main(int argc, char* argv[])
                 }
             }
         };
+
         driver.test="cloth";
-    }
-    else if (strcmp(argv[1], "1") == 0) // volumetric bunny case
-    {
+
+    } else if (strcmp(argv[1], "1") == 0) {
+        // volumetric bunny case
         // TODO
         /*
             1. Create node data from data/points: The first line indicates the number of points and dimension (which is 3).
-            2. Fill segments and rest_length from data/cells: The first line indicates the number of tetrahedra and the number of vertices of each tet (which is 6). Each edge in this tetrahedral mesh will be a segment. Be careful not to create duplicate edges.
+            2. Fill segments and rest_length from data/cells: The first line indicates the number of tetrahedra and the number of vertices of each tet (which is 4). Each edge in this tetrahedral mesh will be a segment. Be careful not to create duplicate edges.
             3. Choose proper youngs_modulus, damping_coeff, dt
             4. Set boundary condition (node_is_fixed) and helper function (to achieve moving boundary condition).
         */
 
-        std::ifstream pointsStream("data/points");
-        std::string line = "";
-        getline(pointsStream, line);
+        // initialize x, segments, and rest_length using the file information
+        readBunny(x, segments, rest_length);
 
-        std::istringstream iss(line);
-        std::vector<std::string> strings(std::istream_iterator<std::string>{iss},
-                                         std::istream_iterator<std::string>());
-
-        // contains the dimension of the points which is 3
-        // int n = std::stoi(strings.at(0));
-        int ptsDim = std::stoi(strings.at(1));
-
-        std::unordered_map<int, TV> points;
-
-        int idx = 0;
-        while (getline(pointsStream, line)) {
-            // Output the text from the file
-            iss = std::istringstream(line);
-            strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
-            TV pt;
-            for (int i = 0; i < ptsDim; i++) {
-              pt(i, 0) = std::stof(strings.at(i));
-            }
-            points[idx] = pt;
-            // points.insert(std::make_pair<int, TV>(idx, pt));
-            // std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
-            idx++;
-        }
-
-        pointsStream.close();
+        // parameters
+        int n = x.size();
+        T mN = 5.f / n;
 
         youngs_modulus = 1.f;
         damping_coeff = 1.f;
         dt = 0.01f;
 
+        v = std::vector<TV>(n, TV(0.f, 0.f, 0.f));
+        m = std::vector<T>(n, mN);
+        springs = std::vector<Eigen::Matrix<int,2,1>>(segments);
+
+        node_is_fixed = std::vector<bool>(n, false);
+        node_is_fixed.at(2140) = true;
+        node_is_fixed.at(2346) = true;
+        node_is_fixed.at(1036) = true;
+
         driver.helper = [&](T t, T dt) {
             // TODO
+            int n = driver.ms.m.size();
+            for (int i = 0; i < n; i++) {
+                if (driver.ms.node_is_fixed.at(i)) {
+                    driver.ms.x.at(i) += TV(0.f, 0.f, 1.f * dt);
+                }
+            }
         };
         driver.test="bunny";
-    }
-
-    else {
+    } else {
         std::cout << "Wrong case number!" << std::endl;
         exit(0);
     }
 
     // simulate
-
     driver.dt = dt;
     driver.ms.segments = segments;
     driver.ms.springs = springs;
