@@ -12,18 +12,104 @@
 
 #include "SimulationDriver.h"
 
+#include <iterator>
+#include <unordered_map>
+
+// type definitions
+using T = float;
+constexpr int dim = 3;
+using TV = Eigen::Matrix<T,dim,1>;
+
+void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::vector<T> RL) {
+  std::ifstream pointsStream("data/points");
+  std::string line = "";
+  getline(pointsStream, line);
+
+  std::istringstream iss(line);
+  std::vector<std::string> strings(std::istream_iterator<std::string>{iss},
+                                    std::istream_iterator<std::string>());
+
+  // contains the dimension of the points which is 3
+  // int n = std::stoi(strings.at(0));
+  int ptsDim = std::stoi(strings.at(1));
+
+  while (getline(pointsStream, line)) {
+      iss = std::istringstream(line);
+      strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+      TV pt;
+      for (int i = 0; i < ptsDim; i++) {
+        pt(i, 0) = std::stof(strings.at(i));
+      }
+      X.push_back(pt);
+      // points.insert(std::make_pair<int, TV>(idx, pt));
+      // std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
+  }
+
+  pointsStream.close();
+
+  // read in data from cells to obtain the topology
+  // of the model
+  std::ifstream cellsStream("data/cells");
+  getline(pointsStream, line);
+  iss = std::istringstream(line);
+  strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+  // int numFaces = std::stoi(strings.at(0));
+  int sidesPerPoly = std::stoi(strings.at(1));
+
+  std::unordered_map<long long int, Eigen::Matrix<int,2,1>> uniqueSegments;
+
+  while (getline(cellsStream, line)) {
+    iss = std::istringstream(line);
+    strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+    for (int i = 0; i < sidesPerPoly; i++) {
+      for (int j = i + 1; j < sidesPerPoly; j++) {
+        long long int segIdx1 = 0;
+        long long int segIdx2 = 0;
+        int pt1 = std::stoi(strings.at(i));
+        int pt2 = std::stoi(strings.at(j));
+        segIdx1 = pt1;
+        segIdx1 |= ((long long int)pt2 << 32);
+        segIdx2 = pt2;
+        segIdx2 |= ((long long int)pt1 << 32);
+        // check both orderings of the pt indices in the segIdx
+        if (!uniqueSegments.count(segIdx1) && !uniqueSegments.count(segIdx2)) {
+          uniqueSegments[segIdx1] = Eigen::Matrix<int,2,1>(pt1, pt2);
+          S.push_back(Eigen::Matrix<int,2,1>(pt1, pt2));
+          RL.push_back(sqrt((X.at(pt1) - X.at(pt2)).transpose() * (X.at(pt1) - X.at(pt2))));
+        }
+      }
+    }
+    // for (int i = 0; i < sidesPerPoly && (((long unsigned int)i) < strings.size()); i++) {)
+    //   long long int segIdx1 = 0;
+    //   long long int segIdx2 = 0;
+    //   int pt1 = std::stoi(strings.at(i));
+    //   int pt2 = std::stoi(strings.at((i + 1) % sidesPerPoly));
+    //   segIdx1 = pt1;
+    //   segIdx1 |= ((long long int)pt2 << 32);
+    //   segIdx2 = pt2;
+    //   segIdx2 |= ((long long int)pt1 << 32);
+    //   // check both orderings of the pt indices in the segIdx
+    //   if (!uniqueSegments.count(segIdx1) && !uniqueSegments.count(segIdx2)) {
+    //     uniqueSegments[segIdx1] = Eigen::Matrix<int,2,1>(pt1, pt2);
+    //     S.push_back(Eigen::Matrix<int,2,1>(pt1, pt2));
+    //     RL.push_back(sqrt((X.at(pt1) - X.at(pt2)).transpose() * (X.at(pt1) - X.at(pt2))));
+    //   }
+    // }
+  }
+
+  cellsStream.close();
+}
+
+
+
 int main(int argc, char* argv[])
 {
-    using T = float;
-    constexpr int dim = 3;
-    using TV = Eigen::Matrix<T,dim,1>;
-
     SimulationDriver<T,dim> driver;
 
     // set up mass spring system
     T youngs_modulus = 0;
     T damping_coeff = 0; 
-    T dt = T(1/24.);
+    T dt = T(1.f/24.f);
 
     // node data
     std::vector<T> m;
@@ -51,6 +137,23 @@ int main(int argc, char* argv[])
             
             The output folder will automatically renamed by bunny_[youngs_modulus], don't worry about overwriting.
         */
+
+        // initialize x, segments, and rest_length using the file information
+        readBunny(x, segments, rest_length);
+
+        // parameters
+        int n = x.size();
+        T mN = 1.f / n;
+
+        v = std::vector<TV>(n, TV(10.f, 0.f, 0.f));
+        v.at(2140) = TV(0.f, 0.f, 0.f);
+        v.at(2346) = TV(0.f, 0.f, 0.f);
+        m = std::vector<T>(n, mN);
+
+        node_is_fixed = std::vector<bool>(n, false);
+        node_is_fixed.at(2140) = true;
+        node_is_fixed.at(2346) = true;
+
         std::stringstream ss;
         ss << std::fixed << std::setprecision(2) << youngs_modulus;
         driver.test="bunny_"+ss.str();

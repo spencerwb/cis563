@@ -83,22 +83,40 @@ void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::
   while (getline(cellsStream, line)) {
     iss = std::istringstream(line);
     strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
-    for (int i = 0; i < sidesPerPoly && (((long unsigned int)i) < strings.size()); i++) {
-      long long int segIdx1 = 0;
-      long long int segIdx2 = 0;
-      int pt1 = std::stoi(strings.at(i));
-      int pt2 = std::stoi(strings.at((i + 1) % sidesPerPoly));
-      segIdx1 = pt1;
-      segIdx1 |= ((long long int)pt2 << 32);
-      segIdx2 = pt2;
-      segIdx2 |= ((long long int)pt1 << 32);
-      // check both orderings of the pt indices in the segIdx
-      if (!uniqueSegments.count(segIdx1) && !uniqueSegments.count(segIdx2)) {
-        uniqueSegments[segIdx1] = Eigen::Matrix<int,2,1>(pt1, pt2);
-        S.push_back(Eigen::Matrix<int,2,1>(pt1, pt2));
-        RL.push_back(sqrt((X.at(pt1) - X.at(pt2)).transpose() * (X.at(pt1) - X.at(pt2))));
+    for (int i = 0; i < sidesPerPoly; i++) {
+      for (int j = i + 1; j < sidesPerPoly; j++) {
+        long long int segIdx1 = 0;
+        long long int segIdx2 = 0;
+        int pt1 = std::stoi(strings.at(i));
+        int pt2 = std::stoi(strings.at(j));
+        segIdx1 = pt1;
+        segIdx1 |= ((long long int)pt2 << 32);
+        segIdx2 = pt2;
+        segIdx2 |= ((long long int)pt1 << 32);
+        // check both orderings of the pt indices in the segIdx
+        if (!uniqueSegments.count(segIdx1) && !uniqueSegments.count(segIdx2)) {
+          uniqueSegments[segIdx1] = Eigen::Matrix<int,2,1>(pt1, pt2);
+          S.push_back(Eigen::Matrix<int,2,1>(pt1, pt2));
+          RL.push_back(sqrt((X.at(pt1) - X.at(pt2)).transpose() * (X.at(pt1) - X.at(pt2))));
+        }
       }
     }
+    // for (int i = 0; i < sidesPerPoly && (((long unsigned int)i) < strings.size()); i++) {)
+    //   long long int segIdx1 = 0;
+    //   long long int segIdx2 = 0;
+    //   int pt1 = std::stoi(strings.at(i));
+    //   int pt2 = std::stoi(strings.at((i + 1) % sidesPerPoly));
+    //   segIdx1 = pt1;
+    //   segIdx1 |= ((long long int)pt2 << 32);
+    //   segIdx2 = pt2;
+    //   segIdx2 |= ((long long int)pt1 << 32);
+    //   // check both orderings of the pt indices in the segIdx
+    //   if (!uniqueSegments.count(segIdx1) && !uniqueSegments.count(segIdx2)) {
+    //     uniqueSegments[segIdx1] = Eigen::Matrix<int,2,1>(pt1, pt2);
+    //     S.push_back(Eigen::Matrix<int,2,1>(pt1, pt2));
+    //     RL.push_back(sqrt((X.at(pt1) - X.at(pt2)).transpose() * (X.at(pt1) - X.at(pt2))));
+    //   }
+    // }
   }
 
   cellsStream.close();
