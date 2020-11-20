@@ -17,9 +17,9 @@ string
 -
 fstream
 -
-cmath
+cstdlib
 -
-math.h
+cmath
 -
 
 /home/spencer/academic/cis563/Projects/mass_spring/SimulationDriver.h
