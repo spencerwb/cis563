@@ -182,7 +182,7 @@ public:
 
         TM I;
         I << 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0;
-        KS = (youngs_modulus * (((1 / rest_length.at(idx)) - (1 / l)) * (I - N))) + ((youngs_modulus / rest_length.at(idx)) * N);
+        KS = -((youngs_modulus * (((1 / rest_length.at(idx)) - (1 / l)) * (I - N))) + ((youngs_modulus / rest_length.at(idx)) * N));
 
         // write your code above and do not change the following part.
         TM neg_KS = -KS;
