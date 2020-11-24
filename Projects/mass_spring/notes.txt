@@ -13,3 +13,8 @@ Ok, so now it is finally kind of working. I dont know which one of these things 
 problem, but I changed the force vectors so that they are initialized to zero at the
 start of every simulation step. I added the springs vector because I was storing non-geometric
 springs in the segment vector which is for animating points in the geometry.
+
+Lol I figured out why my bunny look sso shitty.
+It was because I forgot to change the pointsStream to cellsStream.
+I also  closed the pointsStream so I have no idea where it was getting its connectivity data
+from.
