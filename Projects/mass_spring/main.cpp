@@ -282,8 +282,8 @@ int main(int argc, char* argv[])
 
         // youngs_modulus = 3.f;
         // damping_coeff = 0.1f;
-        youngs_modulus = 70.f;
-        damping_coeff = 0.5f;
+        youngs_modulus = 100.f;
+        damping_coeff = 0.6f;
         // unlike in the cloth simulation,
         // i had to increase the time resolution by a 
         // power of 10 to avoid instability
@@ -305,7 +305,7 @@ int main(int argc, char* argv[])
             if (t >= 1.f) {
               driver.ms.node_is_fixed.at(1036) = false;
             } else {
-              driver.ms.x.at(1036) += TV(0.3f * dt, 0.f, 0.f);
+              driver.ms.x.at(1036) += TV(0.4f * dt, 0.f, 0.f);
             }
 
 
