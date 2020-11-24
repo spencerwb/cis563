@@ -284,7 +284,7 @@ int main(int argc, char* argv[])
         // damping_coeff = 0.1f;
         youngs_modulus = 4.f;
         damping_coeff = 0.15f;
-        dt = 0.0001f;
+        dt = 0.00001f;
 
         v = std::vector<TV>(n, TV(0.f, 0.f, 0.f));
         m = std::vector<T>(n, mN);
