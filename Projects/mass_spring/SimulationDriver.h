@@ -68,8 +68,8 @@ public:
         // TODO: update position and velocity according to Newton's law.
         for (int i = 0; i < n; i++) {
             if (!ms.node_is_fixed.at(i) && ms.m.at(i)) {
-                ms.v.at(i) += (dt * (gravity + f_spring.at(i) + f_damping.at(i)) / ms.m.at(i));
-                // ms.v.at(i) += (dt * (gravity + f_spring.at(i)) / ms.m.at(i));
+                // ms.v.at(i) += (dt * (gravity + f_spring.at(i) + f_damping.at(i)) / ms.m.at(i));
+                ms.v.at(i) += (dt * (gravity + f_spring.at(i)) / ms.m.at(i));
                 // ms.v.at(i) += (dt * (gravity) / ms.m.at(i));
                 ms.x.at(i) += (dt * ms.v.at(i));
 
