@@ -282,8 +282,8 @@ int main(int argc, char* argv[])
 
         // youngs_modulus = 3.f;
         // damping_coeff = 0.1f;
-        youngs_modulus = 50.f;
-        damping_coeff = 0.3f;
+        youngs_modulus = 70.f;
+        damping_coeff = 0.5f;
         // unlike in the cloth simulation,
         // i had to increase the time resolution by a 
         // power of 10 to avoid instability
@@ -295,18 +295,33 @@ int main(int argc, char* argv[])
         springs = std::vector<Eigen::Matrix<int,2,1>>(segments);
 
         node_is_fixed = std::vector<bool>(n, false);
+        // ear tips
         node_is_fixed.at(2140) = true;
         node_is_fixed.at(2346) = true;
         node_is_fixed.at(1036) = true;
 
         driver.helper = [&](T t, T dt) {
             // TODO
-            int n = driver.ms.m.size();
-            for (int i = 0; i < n; i++) {
-                if (driver.ms.node_is_fixed.at(i) || !driver.ms.node_is_fixed.at(i)) {
-                    driver.ms.x.at(i) += TV(0.f, 0.f, 0.3f * dt);
-                }
+            if (t >= 1.f) {
+              driver.ms.node_is_fixed.at(1036) = false;
+            } else {
+              driver.ms.x.at(1036) += TV(0.3f * dt, 0.f, 0.f);
             }
+
+
+            // int n = driver.ms.m.size();
+            // for (int i = 0; i < n; i++) {
+            //     if (i == 1036) {
+            //       if (t >= 3.f) {
+            //         driver.ms.node_is_fixed.at(i) = false;
+            //       } else {
+            //         driver.ms.x.at(i) += TV(0.3f * dt, 0.f, 0.f);
+            //       }
+            //     }
+            //     if (driver.ms.node_is_fixed.at(i)) {
+            //         driver.ms.x.at(i) += TV(0.f, 0.f, 0.3f * dt);
+            //     }
+            // }
         };
         driver.test="bunny";
     } else {
