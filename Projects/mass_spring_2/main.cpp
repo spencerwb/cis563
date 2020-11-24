@@ -29,20 +29,26 @@ void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::
   std::vector<std::string> strings(std::istream_iterator<std::string>{iss},
                                     std::istream_iterator<std::string>());
 
-  // contains the dimension of the points which is 3
+  // contains the number of points in the file
   // int n = std::stoi(strings.at(0));
+  // contains the dimension of the points which is 3
   int ptsDim = std::stoi(strings.at(1));
 
+  // according to the documentation for getLine, it is unnecessary
+  // to empty the string contents since it is done for you, but this 
+  // is just for sanity's sake.
+  line = "";
   while (getline(pointsStream, line)) {
-      iss = std::istringstream(line);
-      strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
-      TV pt;
-      for (int i = 0; i < ptsDim; i++) {
-        pt(i, 0) = std::stof(strings.at(i));
-      }
-      X.push_back(pt);
-      // points.insert(std::make_pair<int, TV>(idx, pt));
-      // std::cout << points.at(idx)(0, 0) << " " << points.at(idx)(1, 0) << " " << points.at(idx)(2, 0) << std::endl;
+    iss = std::istringstream(line);
+    strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+    TV pt;
+    for (int i = 0; i < ptsDim; i++) {
+      pt(i, 0) = std::stof(strings.at(i));
+    }
+    X.push_back(pt);
+    line = "";
+    // points.insert(std::make_pair<int, TV>(idx, pt));
+    // std::cout << pt(0, 0) << " " << pt(1, 0) << " " << pt(2, 0) << std::endl;
   }
 
   pointsStream.close();
@@ -50,14 +56,15 @@ void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::
   // read in data from cells to obtain the topology
   // of the model
   std::ifstream cellsStream("data/cells");
-  getline(pointsStream, line);
+  getline(cellsStream, line);
   iss = std::istringstream(line);
   strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
-  // int numFaces = std::stoi(strings.at(0));
+  // int numPolys = std::stoi(strings.at(0));
   int sidesPerPoly = std::stoi(strings.at(1));
 
   std::unordered_map<long long int, Eigen::Matrix<int,2,1>> uniqueSegments;
 
+  line = "";
   while (getline(cellsStream, line)) {
     iss = std::istringstream(line);
     strings = std::vector<std::string>(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
@@ -79,6 +86,7 @@ void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::
         }
       }
     }
+    line = "";
     // for (int i = 0; i < sidesPerPoly && (((long unsigned int)i) < strings.size()); i++) {)
     //   long long int segIdx1 = 0;
     //   long long int segIdx2 = 0;

@@ -280,7 +280,7 @@ int main(int argc, char* argv[])
         int n = x.size();
         T mN = 10.f / n;
 
-        youngs_modulus = 5.3f;
+        youngs_modulus = 50.f;
         damping_coeff = 20.f;
         dt = 0.0001f;
 
