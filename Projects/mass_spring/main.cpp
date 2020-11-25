@@ -290,10 +290,15 @@ int main(int argc, char* argv[])
         // youngs_modulus = 100.f;
         // damping_coeff = 0.6f;
         // dt = 0.00001f;
+        // T mN = 0.1f / n;
+        // youngs_modulus = 110.f;
+        // damping_coeff = 1.f;
+        // dt = 0.000001f;
+        // above params are before multiplying gravity with the mass
         T mN = 0.1f / n;
-        youngs_modulus = 110.f;
-        damping_coeff = 1.f;
-        dt = 0.000001f;
+        youngs_modulus = 25.f;
+        damping_coeff = 0.1f;
+        dt = 0.00001f;
 
         v = std::vector<TV>(n, TV(0.f, 0.f, 0.f));
         m = std::vector<T>(n, mN);
