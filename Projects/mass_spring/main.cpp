@@ -278,17 +278,22 @@ int main(int argc, char* argv[])
 
         // parameters
         int n = x.size();
-        T mN = 0.5f / n;
 
         // youngs_modulus = 3.f;
         // damping_coeff = 0.1f;
-        youngs_modulus = 100.f;
-        damping_coeff = 0.6f;
+        // dt = 0.0001f
         // unlike in the cloth simulation,
         // i had to increase the time resolution by a 
         // power of 10 to avoid instability
         // with dt = 0.0001f
-        dt = 0.00001f;
+        // T mN = 0.5f / n;
+        // youngs_modulus = 100.f;
+        // damping_coeff = 0.6f;
+        // dt = 0.00001f;
+        T mN = 0.1f / n;
+        youngs_modulus = 110.f;
+        damping_coeff = 1.f;
+        dt = 0.000001f;
 
         v = std::vector<TV>(n, TV(0.f, 0.f, 0.f));
         m = std::vector<T>(n, mN);
