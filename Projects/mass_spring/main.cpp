@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
     }
 
     if (strcmp(argv[1], "1") == 0) { // bunny case
-        youngs_modulus = 0.1; // TODO: iterate in [0.1, 1, 10, 100, 1000]
+        youngs_modulus = 1000; // TODO: iterate in [0.1, 1, 10, 100, 1000]
         damping_coeff = 2;
         // TODO: 
         /* 
