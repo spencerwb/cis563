@@ -108,6 +108,44 @@ void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::
   cellsStream.close();
 }
 
+void scatterPoints(T h, TV o, TV resolution, T density, int n, TV cO, TV cShape, std::vector<TV>& X) {
+    // density per unit length as opposed to per grid cell
+    density /= h;
+    TV ptsPerDim = cShape * density;
+    ptsPerDim(0) = std::floor(ptsPerDim(0));
+    ptsPerDim(1) = std::floor(ptsPerDim(1));
+    ptsPerDim(2) = std::floor(ptsPerDim(2));
+
+    TV unit;
+    unit << 1, 1, 1;
+    TV max = o + h * (resolution - unit);
+
+    T ptSpacing = 1.f / density;
+    for (int k = 0; k < ptsPerDim(2); k++) {
+        for (int j = 0; j < ptsPerDim(1); j++) {
+            for (int i = 0; i < ptsPerDim(0); i++) {
+                TV pos = TV::Zero();
+                pos(0) = cO(0) + i * ptSpacing;
+                pos(1) = cO(1) + j * ptSpacing;
+                pos(2) = cO(2) + k * ptSpacing;
+                
+                if (pos(0) < o(0) || pos(1) < o(1) || pos(2) < o(2)) {
+                    std::cout << "computed scattered point position exceeds minimum @ ("
+                    << pos(0) << ", " << pos(1) << ", " << pos(2) << ")" << std::endl;
+                    return;
+                } else if (pos(0) > max(0) || pos(1) > max(1) || pos(2) < max(2)) {
+                    std::cout << "computed scattered point position exceeds maximum @ ("
+                    << pos(0) << ", " << pos(1) << ", " << pos(2) << ")" << std::endl;
+                    return;
+                }
+                X.push_back(pos);
+            }
+        }
+    }
+
+    return;
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -117,6 +155,7 @@ int main(int argc, char* argv[])
     T youngs_modulus = 0;
     T damping_coeff = 0; 
     T dt = T(1.f/24.f);
+    int frames = 180;
 
     // node data
     std::vector<T> m;
@@ -221,6 +260,42 @@ int main(int argc, char* argv[])
         driver.test="brush";
     }
 
+    else if (strcmp(argv[1], "3") == 0) {
+        // mu = shear term
+        T shearTerm = 0.f;
+        // lambda = diltional term that penalizes volume changes
+        // T dilationalTerm = 0.f;
+
+        // grid parameters
+        T h = 2.f;                  // grid spacing
+        TV o = TV::Zero();              // grid origin or minimum of the grid
+        TV resolution = TV::Zero();     // nodes per axis
+        resolution << 10, 10, 10;
+
+        // particle parameters
+        // cube origin (minimum of cube)
+        TV cO = TV::Zero();
+        cO << 8, 15, 8;
+        // cube dimensions
+        TV cShape = TV::Zero();
+        cShape << 4, 4, 4;
+        // desired number of points per grid cell
+        T density = std::pow(2, dim);
+        int n = (resolution(0) - 1) * (resolution(1) - 1) * (resolution(2) - 1) * density;
+        x.clear();
+        scatterPoints(h, o, resolution, density, n, cO, cShape, x);
+        T mp = 1.f / n;
+        v = std::vector<TV>(n, TV(0.f, 0.f, 0.f));
+        m = std::vector<T>(n, mp);
+
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2) << shearTerm;
+        driver.test="mpm_"+ss.str();
+
+        driver.ms.grid = Grid<T, dim>(h, o, resolution);
+        frames = 120;
+    }
+
     else {
         std::cout << "Wrong case number!" << std::endl;
         exit(0);
@@ -239,7 +314,7 @@ int main(int argc, char* argv[])
     driver.ms.node_is_fixed = node_is_fixed;
     driver.ms.rest_length = rest_length;
 
-    driver.run(180);
+    driver.run(frames);
 
     return 0;
 }

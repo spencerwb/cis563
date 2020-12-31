@@ -7,6 +7,7 @@
 #include <cstdlib>
 
 #include <cmath>
+#include "Grid.h"
 
 template <typename Scalar, int size>
 void makePD(Eigen::Matrix<Scalar, size, size>& symMtr)
@@ -43,8 +44,24 @@ public:
     std::vector<bool> node_is_fixed;
     std::vector<T> rest_length;
 
+    Grid<T, dim> grid;
+
     MassSpringSystem()
     {}
+
+    void updateParticleVelocities() {
+        int n = m.size();
+        for (int i = 0; i < n; i++) {
+            v.at(i) = computeParticleVelocity(x.at(i));
+        }
+    }
+
+    void updateParticlePositions(float dt) {
+        int n = m.size();
+        for (int i = 0; i < n; i++) {
+            x.at(i) += v.at(i) * dt;
+        }
+    }
 
     void evaluateSpringForces(std::vector<TV >& f, std::vector<TV>& dx)
     {

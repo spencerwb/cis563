@@ -62,7 +62,8 @@ public:
                 else
                     current_dt = remain_dt;
                 helper(accumulate_t, current_dt);
-                advanceOneStepImplicitIntegration(current_dt);
+                // advanceOneStepImplicitIntegration(current_dt);
+                advanceOneStepMPM(current_dt);
                 accumulate_t += current_dt;
                 remain_dt -= current_dt;
                 std::cout << "Frame " << frame << " finished " << int(100 - 100 * remain_dt/frame_dt) << "%" << std::endl;
@@ -74,6 +75,32 @@ public:
             ms.dumpPoly(filename);
             std::cout << std::endl;
         }
+    }
+
+    void advanceOneStepMPM(T dt) {
+
+        int n = ms.x.size();
+
+        ms.grid.clear();
+
+        // particles to grid transfer
+        for (int i = 0; i < n; i++) {
+            ms.grid.updateGridMass(ms.x.at(i), ms.m.at(i));
+            ms.grid.updateGridMomentum(ms.x.at(i), ms.v.at(i), ms.m.at(i));
+        }
+
+        ms.grid.momentumToVelocity();
+
+        ms.grid.applyForces(dt);
+
+        // grid to particles transfer
+        for (int i = 0; i < n; i++) {
+            ms.v.at(i) = ms.grid.computeParticleVelocity(ms.x.at(i));
+            ms.x.at(i) += ms.v.at(i) * dt;
+        }
+
+        return;
+
     }
 
     void advanceOneStepImplicitIntegration(T dt)
