@@ -96,7 +96,7 @@ public:
         // grid to particles transfer
         for (int i = 0; i < n; i++) {
             ms.v.at(i) = ms.grid.computeParticleVelocity(ms.x.at(i));
-            ms.x.at(i) += ms.v.at(i) * dt;
+            ms.x.at(i) += ms.v.at(i) * dt * 100;
         }
 
         return;
