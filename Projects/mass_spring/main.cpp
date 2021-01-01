@@ -120,6 +120,8 @@ void scatterPoints(T h, TV o, TV resolution, T density, int n, TV cO, TV cShape,
     unit << 1, 1, 1;
     TV max = o + h * (resolution - unit);
 
+    std::cout << "max: (" << max(0) << ", " << max(1) << ", " << max(2) << ")" << std::endl;
+
     T ptSpacing = 1.f / density;
     for (int k = 0; k < ptsPerDim(2); k++) {
         for (int j = 0; j < ptsPerDim(1); j++) {
@@ -133,7 +135,7 @@ void scatterPoints(T h, TV o, TV resolution, T density, int n, TV cO, TV cShape,
                     std::cout << "computed scattered point position exceeds minimum @ ("
                     << pos(0) << ", " << pos(1) << ", " << pos(2) << ")" << std::endl;
                     return;
-                } else if (pos(0) > max(0) || pos(1) > max(1) || pos(2) < max(2)) {
+                } else if (pos(0) > max(0) || pos(1) > max(1) || pos(2) > max(2)) {
                     std::cout << "computed scattered point position exceeds maximum @ ("
                     << pos(0) << ", " << pos(1) << ", " << pos(2) << ")" << std::endl;
                     return;
@@ -144,6 +146,49 @@ void scatterPoints(T h, TV o, TV resolution, T density, int n, TV cO, TV cShape,
     }
 
     return;
+
+}
+
+void scatterPoints(T h, TV o, TV resolution, T density, std::vector<TV>& X) {
+    TV unit;
+    unit << 1, 1, 1;
+    TV max = o + h * (resolution - unit);
+
+    TV cShape;
+    cShape << 3, 3, 3;          // in grid coords
+    // TV cLWH = cShape * h;       // size in world space coords
+    // assuming that the corners of the cube are initialized to be grid-aligned
+    // 4 grid cells wide containing 5 points
+    TV cO;
+    cO << 3 * h, 9 * h, 3 * h;
+    T linearDensity = std::pow(density, 1.f / 3.f);
+
+    // density per unit length as opposed to per grid cell
+    density /= h;
+    T ptSpacing = 1.f / density;
+
+    for (int k = 0; k < 4 * linearDensity; k++) {
+        for (int j = 0; j < 4 * linearDensity; j++) {
+            for (int i = 0; i < 4 * linearDensity; i++) {
+                TV pos = TV::Zero();
+                pos(0) = cO(0) + i * ptSpacing;
+                pos(1) = cO(1) + j * ptSpacing;
+                pos(2) = cO(2) + k * ptSpacing;
+                
+                if (pos(0) < o(0) || pos(1) < o(1) || pos(2) < o(2)) {
+                    std::cout << "computed scattered point position exceeds minimum @ ("
+                    << pos(0) << ", " << pos(1) << ", " << pos(2) << ")" << std::endl;
+                    return;
+                } else if (pos(0) > max(0) || pos(1) > max(1) || pos(2) > max(2)) {
+                    std::cout << "computed scattered point position exceeds maximum @ ("
+                    << pos(0) << ", " << pos(1) << ", " << pos(2) << ")" << std::endl;
+                    return;
+                }
+                X.push_back(pos);
+            }
+        }
+    }
+
 
 }
 
@@ -270,7 +315,7 @@ int main(int argc, char* argv[])
         T h = 2.f;                  // grid spacing
         TV o = TV::Zero();              // grid origin or minimum of the grid
         TV resolution = TV::Zero();     // nodes per axis
-        resolution << 10, 10, 10;
+        resolution << 11, 11, 11;
 
         // particle parameters
         // cube origin (minimum of cube)
@@ -278,12 +323,15 @@ int main(int argc, char* argv[])
         cO << 8, 15, 8;
         // cube dimensions
         TV cShape = TV::Zero();
-        cShape << 4, 4, 4;
+        cShape << 4, 4, 4;      // length width and height of cube
         // desired number of points per grid cell
         T density = std::pow(2, dim);
         int n = (resolution(0) - 1) * (resolution(1) - 1) * (resolution(2) - 1) * density;
         x.clear();
         scatterPoints(h, o, resolution, density, n, cO, cShape, x);
+        x.clear();
+        scatterPoints(h, o, resolution, density, x);
+        std::cout << x.size() << std::endl;
         T mp = 1.f / n;
         v = std::vector<TV>(n, TV(0.f, 0.f, 0.f));
         m = std::vector<T>(n, mp);

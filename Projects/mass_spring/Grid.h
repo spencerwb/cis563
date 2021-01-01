@@ -9,8 +9,9 @@ class Grid {
         T h;            // grid spacing
         TV o;           // grid origin or minimum of the grid
         TV resolution;  // nodes per axis
-        TV size;        // size of the grid
+        TV size;        // size of the grid in world space
         int n;          // number of nodes in the grid
+        TV max;
 
         std::vector<T> m;
         std::vector<TV> v;
@@ -27,6 +28,7 @@ class Grid {
             TV unit;
             unit << 1, 1, 1;
             size = h * (resolution - unit);
+            max = o + size;
 
             m = std::vector<T>(n, 0.f);
             v = std::vector<TV>(n, TV::Zero());
@@ -87,14 +89,16 @@ class Grid {
             Bp(1) = int(Bp(1));
             Bp(2) = int(Bp(2));
             for (int i = Bp(0); i <= Bp(0) + 2; i++) {
-                for (int j = Bp(1); i <= Bp(1) + 2; j++) {
-                    for (int k = Bp(2); i <= Bp(2) + 2; k++) {
+                for (int j = Bp(1); j <= Bp(1) + 2; j++) {
+                    for (int k = Bp(2); k <= Bp(2) + 2; k++) {
                         TV bp = TV();
                         bp(0) = i;
                         bp(1) = j;
                         bp(2) = k;
                         
-                        float w = kernel(xp, gridIdx3DToPos(bp));
+                        TV bpos = gridIdx3DToPos(bp);
+                        if (bpos(0) > max(0) || bpos(1) > max(1) || bpos(2) > max(2)) continue;
+                        float w = kernel(xp, bpos);
                         m.at(gridIdx3DTo1D(bp)) += mp * w;
                     }
                 }
@@ -111,14 +115,16 @@ class Grid {
             Bp(1) = int(Bp(1));
             Bp(2) = int(Bp(2));
             for (int i = Bp(0); i <= Bp(0) + 2; i++) {
-                for (int j = Bp(1); i <= Bp(1) + 2; j++) {
-                    for (int k = Bp(2); i <= Bp(2) + 2; k++) {
+                for (int j = Bp(1); j <= Bp(1) + 2; j++) {
+                    for (int k = Bp(2); k <= Bp(2) + 2; k++) {
                         TV bp = TV();
                         bp(0) = i;
                         bp(1) = j;
                         bp(2) = k;
                         
-                        float w = kernel(xp, gridIdx3DToPos(bp));
+                        TV bpos = gridIdx3DToPos(bp);
+                        if (bpos(0) > max(0) || bpos(1) > max(1) || bpos(2) > max(2)) continue;
+                        float w = kernel(xp, bpos);
                         v.at(gridIdx3DTo1D(bp)) += mp * w * vp;
                     }
                 }
@@ -152,14 +158,16 @@ class Grid {
             Bp(1) = int(Bp(1));
             Bp(2) = int(Bp(2));
             for (int i = Bp(0); i <= Bp(0) + 2; i++) {
-                for (int j = Bp(1); i <= Bp(1) + 2; j++) {
-                    for (int k = Bp(2); i <= Bp(2) + 2; k++) {
+                for (int j = Bp(1); j <= Bp(1) + 2; j++) {
+                    for (int k = Bp(2); k <= Bp(2) + 2; k++) {
                         TV bp = TV();
                         bp(0) = i;
                         bp(1) = j;
                         bp(2) = k;
                         
-                        float w = kernel(xp, gridIdx3DToPos(bp));
+                        TV bpos = gridIdx3DToPos(bp);
+                        if (bpos(0) > max(0) || bpos(1) > max(1) || bpos(2) > max(2)) continue;
+                        float w = kernel(xp, bpos);
                         vp += v.at(gridIdx3DTo1D(bp)) * w;
                     }
                 }

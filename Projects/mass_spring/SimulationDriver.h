@@ -61,7 +61,7 @@ public:
                     current_dt = remain_dt / 2;
                 else
                     current_dt = remain_dt;
-                helper(accumulate_t, current_dt);
+                // helper(accumulate_t, current_dt);
                 // advanceOneStepImplicitIntegration(current_dt);
                 advanceOneStepMPM(current_dt);
                 accumulate_t += current_dt;
