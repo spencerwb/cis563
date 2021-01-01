@@ -43,6 +43,7 @@ class Grid {
             TV unit;
             unit << 1, 1, 1;
             size = h * (resolution - unit);
+            max = o + size;
 
             m = std::vector<T>(n, 0.f);
             v = std::vector<TV>(n, TV::Zero());
@@ -144,8 +145,27 @@ class Grid {
         void applyForces(float dt) {
             TV g = TV::Zero();
             g(1) = -9.8f;
-            for (int i = 0; i < n; i++)
-                v.at(i) += g * dt;
+            // for (int i = 0; i < n; i++) {
+            //     if ()
+            //     v.at(i) += g * dt;
+            // }
+            for (int i = 0; i < resolution(0); i++) {
+                for (int j = 0; j < resolution(1); j++) {
+                    for (int k = 0; k < resolution(2); k++) {
+                        TV bp = TV();
+                        bp << i, j, k;
+                        
+                        TV bpos = gridIdx3DToPos(bp);
+                        // if this grid node is at the bottom of the box, then it
+                        // is assumed to be the ground
+                        if (bpos(1) == 0) {
+                            v.at(gridIdx3DTo1D(bp)) = TV::Zero();
+                        } else {
+                            v.at(gridIdx3DTo1D(bp)) += g * dt;
+                        }
+                    }
+                }
+            }
         }
 
         TV computeParticleVelocity(TV xp) {
@@ -172,6 +192,7 @@ class Grid {
                     }
                 }
             }
+
             return vp;
         }
 };
