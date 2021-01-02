@@ -131,6 +131,7 @@ class Grid {
                     }
                 }
             }
+            return;
         }
 
         void momentumToVelocity() {
@@ -271,5 +272,34 @@ class Grid {
             return;
         }
 
+
+        TM computeVelocityGradient(TV xp) {
+            // base index
+            TV half;
+            half << 0.5, 0.5, 0.5;
+            TV Bp = (xp - o - half * h) / h;
+            Bp(0) = int(Bp(0));
+            Bp(1) = int(Bp(1));
+            Bp(2) = int(Bp(2));
+
+            TM gradV;
+            gradV << 0, 0, 0, 0, 0, 0, 0, 0, 0;
+            for (int i = Bp(0); i <= Bp(0) + 2; i++) {
+                for (int j = Bp(1); j <= Bp(1) + 2; j++) {
+                    for (int k = Bp(2); k <= Bp(2) + 2; k++) {
+                        TV bp = TV();
+                        bp(0) = i;
+                        bp(1) = j;
+                        bp(2) = k;
+                        
+                        TV bpos = gridIdx3DToPos(bp);
+                        if (bpos(0) > max(0) || bpos(1) > max(1) || bpos(2) > max(2)) continue;
+                        TV gradW = kernelGradient(xp, bpos);
+                        gradV += v.at(gridIdx3DTo1D(bp)) * gradW.transpose();
+                    }
+                }
+            }
+            return gradV;
+        }
 
 };

@@ -10,6 +10,7 @@ template<class T, int dim>
 class SimulationDriver{
 public:
     using TV = Eigen::Matrix<T,dim,1>;
+    using TM = Eigen::Matrix<T,dim,dim>;
     using SpMat = Eigen::SparseMatrix<T>;
     using Vec = Eigen::Matrix<T,Eigen::Dynamic,1>;
 
@@ -100,10 +101,13 @@ public:
         // for (int i = 0; i < n; i++) {
         //     ms.grid.computeElasticForce(ms.x.at(i), ms.vol, ms.F.at(i), ms.shearTerm, ms.dilationalTerm);
         // }
-        // std::cout << "APPLYING FORCES" << std::endl;
+        // std::cout << "APPLYING ELASTIC FORCES" << std::endl;
         // ms.grid.applyElasticForces(dt);
 
-        std::cout << "GRID TO PARTICLE TRANSFER" << std::endl;
+        TM I;
+        I << 1, 0, 0, 0, 1, 0, 0, 0, 1;
+
+        // std::cout << "GRID TO PARTICLE TRANSFER" << std::endl;
         // grid to particles transfer
         for (int i = 0; i < n; i++) {
             // std::cout << "to v" << i;
@@ -113,6 +117,13 @@ public:
             //     std::cout << "error at particle " << i << std::endl;
             //     return;
             // }
+
+
+            // UPDATE DEFORMATION GRADIENT
+            TM gradV = ms.grid.computeVelocityGradient(ms.x.at(i));
+            ms.F.at(i) = (I + dt * gradV) * ms.F.at(i);
+
+
             // std::cout << "to x" << i;
             ms.x.at(i) += ms.v.at(i) * dt;
             // std::cout << " done " << std::endl;
