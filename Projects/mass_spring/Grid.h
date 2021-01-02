@@ -5,6 +5,7 @@ template<class T, int dim>
 class Grid {
     public:
         using TV = Eigen::Matrix<T,dim,1>;
+        using TM = Eigen::Matrix<T,dim,dim>;
 
         T h;            // grid spacing
         TV o;           // grid origin or minimum of the grid
@@ -142,7 +143,7 @@ class Grid {
             }
         }
 
-        void applyForces(float dt) {
+        void applyGravity(float dt) {
             TV g = TV::Zero();
             g(1) = -9.8f;
             // for (int i = 0; i < n; i++) {
@@ -195,4 +196,80 @@ class Grid {
 
             return vp;
         }
+
+        T BSplineInterpDerivative(T x) {
+            T ax = std::abs(x);
+            if (0 <= ax && ax < 0.5f) {
+                return -2 * x;
+            } else if (0.5 <= ax && ax < 1.5f) {
+                return x * (1.5 - ax) / ax;
+            } else if (1.5f <= x) {
+                return 0.f;
+            }
+            return INFINITY;
+        }
+
+        TV kernelGradient(TV xp, TV xi) {
+            TV gradW;
+            TV xDiffh = (xp - xi) / h;
+            gradW(0) = BSplineInterpDerivative(xDiffh(0)) * BSplineInterp(xDiffh(1)) * BSplineInterp(xDiffh(2)) / h;
+            gradW(1) = BSplineInterp(xDiffh(0)) * BSplineInterpDerivative(xDiffh(1)) * BSplineInterp(xDiffh(2)) / h;
+            gradW(1) = BSplineInterp(xDiffh(0)) * BSplineInterp(xDiffh(1)) * BSplineInterpDerivative(xDiffh(2)) / h;
+            return gradW;
+        }
+
+        // the particle's position, volume, and current deformation gradient
+        void computeElasticForce(TV xp, T vol, TM F, T shearTerm, T dilationalTerm) {
+            for (int i = 0; i < resolution(0); i++) {
+                for (int j = 0; j < resolution(1); j++) {
+                    for (int k = 0; k < resolution(2); k++) {
+                        TV bp = TV();
+                        bp << i, j, k;
+                        
+                        TV bpos = gridIdx3DToPos(bp);
+                        // STOP if the current node is out of bounds
+                        if (bpos(0) > max(0) || bpos(1) > max(1) || bpos(2) > max(2)) continue;
+                        
+                        int idx = gridIdx3DTo1D(bp);
+
+                        Eigen::JacobiSVD<TM> svd(F, Eigen::ComputeThinU | Eigen::ComputeThinV);
+                        TM U = svd.matrixU();
+                        TM VT = svd.matrixV().transpose();
+                        TM R = U * VT;
+                        // auto sv = svd.singularValues();
+                        // T s0 = sv(0);
+                        // T s1 = sv(1);
+                        // T s2 = sv(2);
+
+                        T J = F.determinant();
+                        // std::cout << s0 << ", " << s1 << ", " << s2 << std::endl;
+                        TM P = 2 * shearTerm * (F - R) + dilationalTerm * (J - 1) * J * F.inverse().transpose();
+                        TV gradW = kernelGradient(xp, bpos);
+                        f.at(idx) -= vol * P * F.transpose() * gradW;
+                    }
+                }
+            }
+        }
+
+
+        void applyElasticForces(float dt) {
+            for (int i = 0; i < this->n; i++) {
+                if (i >= 1331) {
+                    std::cout << "here at idx " << i << std::endl;
+                }
+                v.at(i) += (dt * f.at(i) / m.at(i));
+                // TV vi = (dt * f.at(i) / m.at(i));
+                // if (false) {
+                //     vi += TV::Zero();
+                // }
+
+                // const T vx = vi(0);
+                // // std::cout << "here at idx " << i << std::endl;
+                // v.at(i) << vx, 0, 0;
+            }
+
+            return;
+        }
+
+
 };

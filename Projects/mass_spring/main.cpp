@@ -19,6 +19,7 @@
 using T = float;
 constexpr int dim = 3;
 using TV = Eigen::Matrix<T,dim,1>;
+using TM = Eigen::Matrix<T,dim,dim>;
 
 void readBunny(std::vector<TV>& X, std::vector<Eigen::Matrix<int,2,1>>& S, std::vector<T>& RL) {
   std::ifstream pointsStream("data/points");
@@ -161,12 +162,14 @@ void scatterPoints(T h, TV o, TV resolution, T density, std::vector<TV>& X) {
     // 4 grid cells wide containing 5 points
     TV cO;
     cO << 3 * h, 9 * h, 3 * h;
+    // number of nodes per cell in a single dimension
     T linearDensity = std::pow(density, 1.f / 3.f);
 
     // density per unit length as opposed to per grid cell
     density /= h;
     T ptSpacing = 1.f / density;
 
+    // in total there are 512 nodes
     for (int k = 0; k < 4 * linearDensity; k++) {
         for (int j = 0; j < 4 * linearDensity; j++) {
             for (int i = 0; i < 4 * linearDensity; i++) {
@@ -309,7 +312,7 @@ int main(int argc, char* argv[])
         // mu = shear term
         T shearTerm = 0.f;
         // lambda = diltional term that penalizes volume changes
-        // T dilationalTerm = 0.f;
+        T dilationalTerm = 0.f;
 
         // grid parameters
         T h = 2.f;                  // grid spacing
@@ -336,11 +339,26 @@ int main(int argc, char* argv[])
         v = std::vector<TV>(n, TV(0.f, 0.f, 0.f));
         m = std::vector<T>(n, mp);
 
+        // driver initializations specific to mpm
         std::stringstream ss;
         ss << std::fixed << std::setprecision(2) << shearTerm;
         driver.test="mpm_"+ss.str();
 
         driver.ms.grid = Grid<T, dim>(h, o, resolution);
+
+        TM I;
+        I << 1, 0, 0, 0, 1, 0, 0, 0, 1;
+        driver.ms.F = std::vector<TM>(n, I);
+
+        // designed the box to occupy 4 grid cells in each direction
+        T linearDensity = std::pow(density, 1.f / 3.f);
+        T nPtsC = std::pow(4 * linearDensity, 3);
+        // volume per particle
+        driver.ms.vol = std::pow(4 * h, 3) / nPtsC;
+
+        driver.ms.shearTerm = shearTerm;
+        driver.ms.dilationalTerm = dilationalTerm;
+
         frames = 120;
     }
 

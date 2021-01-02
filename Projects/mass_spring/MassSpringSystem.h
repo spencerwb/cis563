@@ -39,6 +39,11 @@ public:
     std::vector<TV> x;
     std::vector<TV> target_x;
     std::vector<TV> v;
+    std::vector<TM> F;          // per particle deformation gradient
+    T vol;                      // per particle volume of the discretized material space
+    T shearTerm;
+    T dilationalTerm;
+
     T youngs_modulus;
     T damping_coeff;
     std::vector<bool> node_is_fixed;
